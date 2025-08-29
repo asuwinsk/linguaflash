@@ -20,12 +20,12 @@ public class Deck {
     private String name;
     private String description;
     private LocalDateTime dateCreated;
-//    @ManyToOne
-//    @JoinColumn(name = "source_language_id")
-//    private Language sourceLanguage;
-//    @ManyToOne
-//    @JoinColumn(name = "target_language_id")
-//    private Language targetLanguage;
+    @ManyToOne
+    @JoinColumn(name = "source_language_id")
+    private Language sourceLanguage;
+    @ManyToOne
+    @JoinColumn(name = "target_language_id")
+    private Language targetLanguage;
     @Column(length = 50)
     private String color;
 //    @ManyToOne

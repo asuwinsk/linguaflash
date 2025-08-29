@@ -1,5 +1,6 @@
 package pl.coderslab.linguaflash.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.model.Flashcard;
@@ -33,6 +34,7 @@ public class DeckController {
     }
 
     // create a new deck
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
     public String createDeck(@RequestBody @Valid Deck deck) {
         deckService.save(deck);
@@ -49,8 +51,8 @@ public class DeckController {
         deck.setName(deck.getName());
         deck.setDescription(deck.getDescription());
         deck.setDateCreated(existingDeck.getDateCreated());
-//        deck.setTargetLanguage(deck.getTargetLanguage());
-//        deck.setSourceLanguage(deck.getSourceLanguage());
+        deck.setTargetLanguage(deck.getTargetLanguage());
+        deck.setSourceLanguage(deck.getSourceLanguage());
         deck.setColor(deck.getColor());
 //        deck.setDeckTag(deck.getDeckTag());
         deckService.save(deck);
