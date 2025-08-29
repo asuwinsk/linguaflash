@@ -1,10 +1,8 @@
 package pl.coderslab.linguaflash.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Entity
 @Table(name = "flashcards")
@@ -19,9 +17,7 @@ public class Flashcard {
     private Long id;
     private String front;
     private String back;
+    private String exampleSentence;
     @Enumerated(EnumType.STRING)
     private Level level;
-    @ManyToMany(mappedBy = "flashcards")
-    @JsonIgnore
-    private List<Deck> decks;
 }
