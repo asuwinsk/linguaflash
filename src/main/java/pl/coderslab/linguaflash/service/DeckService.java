@@ -6,6 +6,7 @@ import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeckService {
@@ -23,8 +24,8 @@ public class DeckService {
         deckRepository.save(deck);
     }
 
-    public Deck findById(Long id) {
-        return deckRepository.findById(id).orElse(null);
+    public Optional<Deck> findById(Long id) {
+        return deckRepository.findById(id);
     }
 
     public void remove(Deck deck) {

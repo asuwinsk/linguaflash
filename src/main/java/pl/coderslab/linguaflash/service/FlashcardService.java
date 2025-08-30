@@ -5,6 +5,7 @@ import pl.coderslab.linguaflash.model.Flashcard;
 import pl.coderslab.linguaflash.repository.FlashcardRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FlashcardService {
@@ -14,8 +15,9 @@ public class FlashcardService {
         this.flashcardRepository = flashcardRepository;
     }
 
-    public Flashcard findById(Long idCard) {
-        return flashcardRepository.findById(idCard).orElse(null);
+    public Optional<Flashcard> findById(Long idCard) {
+
+        return flashcardRepository.findById(idCard);
     }
 
     public List<Flashcard> findAll() {

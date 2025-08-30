@@ -5,6 +5,7 @@ import pl.coderslab.linguaflash.model.DeckTag;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DeckTagService {
@@ -18,8 +19,8 @@ public class DeckTagService {
         return deckTagRepository.findAll();
     }
 
-    public DeckTag findById(Long id) {
-        return this.deckTagRepository.findById(id).orElse(null);
+    public Optional<DeckTag> findById(Long id) {
+        return this.deckTagRepository.findById(id);
     }
 
     public void save(DeckTag deckTag) {

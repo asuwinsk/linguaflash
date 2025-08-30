@@ -28,8 +28,8 @@ public class Deck {
     private Language targetLanguage;
     @Column(length = 50)
     private String color;
-//    @ManyToOne
-//    private DeckTag deckTag;
+    @ManyToOne
+    private DeckTag deckTag;
     @ManyToMany
     @JoinTable(name = "deck_flashcards",
             joinColumns = @JoinColumn(name = "deck_id"),

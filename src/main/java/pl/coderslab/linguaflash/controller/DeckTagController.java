@@ -1,18 +1,20 @@
 package pl.coderslab.linguaflash.controller;
 
-import jakarta.validation.GroupSequence;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.linguaflash.model.DeckTag;
 import pl.coderslab.linguaflash.service.DeckTagService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/deck-tags")
-public class DeckTagContraoller {
+public class DeckTagController {
     private final DeckTagService deckTagService;
 
-    public DeckTagContraoller(DeckTagService deckTagService) {
+    public DeckTagController(DeckTagService deckTagService) {
         this.deckTagService = deckTagService;
     }
 
@@ -24,11 +26,17 @@ public class DeckTagContraoller {
 
     // find by id
     @GetMapping("/{id}")
-    public DeckTag getDeckTagById(@PathVariable Long id) {
-        return deckTagService.findById(id);
+    public ResponseEntity<Optional<DeckTag>> getDeckTagById(@PathVariable Long id) {
+        Optional<DeckTag> deckTag = deckTagService.findById(id);
+        if (deckTag.isPresent()) {
+            return ResponseEntity.ok(deckTag);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // add a deck tag
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
     public String addDeckTag(@RequestBody DeckTag deckTag) {
         deckTagService.save(deckTag);
@@ -38,11 +46,11 @@ public class DeckTagContraoller {
     // remove a deck tag
     @DeleteMapping("/remove/{id}")
     public String removeDeckTag(@PathVariable Long id) {
-        DeckTag deckTag = deckTagService.findById(id);
-        if (deckTag == null) {
+        Optional<DeckTag> deckTag = deckTagService.findById(id);
+        if (deckTag.isEmpty()) {
             return "Deck tag not found";
         }
-        deckTagService.remove(deckTag);
+        deckTagService.remove(deckTag.get());
         return "Deck tag removed successfully";
     }
 }
