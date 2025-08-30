@@ -1,5 +1,7 @@
-package pl.coderslab.linguaflash.dto;
+package pl.coderslab.linguaflash.mapper;
 
+import pl.coderslab.linguaflash.dto.DeckRequestDTO;
+import pl.coderslab.linguaflash.dto.DeckResponseDTO;
 import pl.coderslab.linguaflash.model.Deck;
 
 public class DeckDTOMapper {

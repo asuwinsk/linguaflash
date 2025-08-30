@@ -2,7 +2,7 @@ package pl.coderslab.linguaflash.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.coderslab.linguaflash.dto.DeckDTOMapper;
+import pl.coderslab.linguaflash.mapper.DeckDTOMapper;
 import pl.coderslab.linguaflash.dto.DeckRequestDTO;
 import pl.coderslab.linguaflash.dto.DeckResponseDTO;
 import pl.coderslab.linguaflash.model.Deck;

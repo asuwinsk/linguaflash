@@ -3,6 +3,8 @@ package pl.coderslab.linguaflash.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.linguaflash.ResourceNotFoundException;
+import pl.coderslab.linguaflash.dto.FlashcardRequestDTO;
+import pl.coderslab.linguaflash.mapper.FlashcardDTOMapper;
 import pl.coderslab.linguaflash.model.Flashcard;
 import pl.coderslab.linguaflash.service.FlashcardService;
 
@@ -35,23 +37,24 @@ public class FlashcardController {
     // create a new flashcard
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public String createFlashcard(@RequestBody Flashcard flashcard) {
-        flashcardService.save(flashcard);
+    public String createFlashcard(@RequestBody FlashcardRequestDTO flashcardDTO) {
+        flashcardService.save(FlashcardDTOMapper.toFlashcard(flashcardDTO));
         return "Flashcard created successfully";
     }
 
     // update an existing flashcard
     @PutMapping("/update/{id}")
-    public String updateFlashcard(@PathVariable Long id, @RequestBody Flashcard flashcard) {
+    public String updateFlashcard(@PathVariable Long id, @RequestBody FlashcardRequestDTO flashcardDTO) {
         Optional<Flashcard> existingFlashcard = flashcardService.findById(id);
         if (existingFlashcard.isEmpty()) {
             return "Flashcard not found";
         }
-        flashcard.setFront(flashcard.getFront());
-        flashcard.setBack(flashcard.getBack());
-        flashcard.setExampleSentence(flashcard.getExampleSentence());
-        flashcard.setLevel(flashcard.getLevel());
-        flashcardService.save(flashcard);
+        Flashcard existingFlashcardValue = existingFlashcard.get();
+        existingFlashcardValue.setFront(flashcardDTO.getFront());
+        existingFlashcardValue.setBack(flashcardDTO.getBack());
+        existingFlashcardValue.setExampleSentence(flashcardDTO.getExampleSentence());
+        existingFlashcardValue.setLevel(flashcardDTO.getLevel());
+        flashcardService.save(existingFlashcardValue);
         return "Flashcard updated successfully";
     }
 

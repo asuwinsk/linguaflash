@@ -3,6 +3,8 @@ package pl.coderslab.linguaflash.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.linguaflash.mapper.DeckTagDTOMapper;
+import pl.coderslab.linguaflash.dto.DeckTagRequestDTO;
 import pl.coderslab.linguaflash.model.DeckTag;
 import pl.coderslab.linguaflash.service.DeckTagService;
 
@@ -38,8 +40,8 @@ public class DeckTagController {
     // add a deck tag
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add")
-    public String addDeckTag(@RequestBody DeckTag deckTag) {
-        deckTagService.save(deckTag);
+    public String addDeckTag(@RequestBody DeckTagRequestDTO deckTagDTO) {
+        deckTagService.save(DeckTagDTOMapper.toDeckTag(deckTagDTO));
         return "Deck tag added successfully";
     }
 
