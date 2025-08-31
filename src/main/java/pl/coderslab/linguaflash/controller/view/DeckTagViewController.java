@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.coderslab.linguaflash.model.DeckTag;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
-import pl.coderslab.linguaflash.service.DeckTagService;
 
 @Controller
 @RequestMapping("/view/decktags")
