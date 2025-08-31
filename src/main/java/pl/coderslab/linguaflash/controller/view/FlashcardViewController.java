@@ -45,7 +45,7 @@ public class FlashcardViewController {
                 flashcard.getBack() == null || flashcard.getBack().trim().isEmpty() ||
                 flashcard.getExampleSentence() == null || flashcard.getExampleSentence().trim().isEmpty() ||
                 flashcard.getLevel() == null) {
-            return "redirect:/view/flashcards/add" + "?error=true";
+            return "redirect:/view/flashcards/add?error=true";
         }
         flashcardRepository.save(flashcard);
         return "redirect:/view/flashcards";
