@@ -1,10 +1,13 @@
 package pl.coderslab.linguaflash.controller.view;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
@@ -39,30 +42,53 @@ public class DeckViewController {
         return "decks/view";
     }
 
+//    @GetMapping("/add")
+//    public String addForm(@RequestParam(name = "error", required = false) String error, Model model) {
+//        model.addAttribute("languages", languageRepository.findAll());
+//        model.addAttribute("deckTags", deckTagRepository.findAll());
+//        model.addAttribute("deck", new Deck());
+//        if (error != null) {
+//            model.addAttribute("error", true);
+//        } else {
+//            model.addAttribute("error", false);
+//        }
+//        return "decks/form";
+//    }
+
+//    @PostMapping("/add")
+//    public String addDeck(@ModelAttribute Deck deck) {
+//        if (
+//                deck.getName() == null || deck.getName().trim().isEmpty() ||
+//                deck.getDescription() == null || deck.getDescription().trim().isEmpty() ||
+//                deck.getSourceLanguage() == null ||
+//                deck.getTargetLanguage() == null
+//              || deck.getDeckTag() == null
+//        ) {
+//            return "redirect:/view/decks/add?error=true";
+//        }
+//        deck.setDateCreated(LocalDateTime.now());
+//        deckRepository.save(deck);
+//        return "redirect:/view/decks";
+//    }
+
     @GetMapping("/add")
-    public String addForm(@RequestParam(name = "error", required = false) String error, Model model) {
+    public String addForm(Model model) {
         model.addAttribute("languages", languageRepository.findAll());
         model.addAttribute("deckTags", deckTagRepository.findAll());
         model.addAttribute("deck", new Deck());
-        if (error != null) {
-            model.addAttribute("error", true);
-        } else {
-            model.addAttribute("error", false);
-        }
         return "decks/form";
     }
 
     @PostMapping("/add")
-    public String addDeck(@ModelAttribute Deck deck) {
-        if (deck.getName() == null || deck.getName().trim().isEmpty() ||
-                deck.getDescription() == null || deck.getDescription().trim().isEmpty() ||
-                deck.getSourceLanguage() == null ||
-                deck.getTargetLanguage() == null
-              || deck.getDeckTag() == null
-        ) {
-            return "redirect:/view/decks/add?error=true";
+    public String addDeck(@Valid @ModelAttribute("deck") Deck deck,
+                          BindingResult bindingResult,
+                          Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("languages", languageRepository.findAll());
+            model.addAttribute("deckTags", deckTagRepository.findAll());
+            model.addAttribute("error", true);
+            return "decks/form";
         }
-        deck.setDateCreated(LocalDateTime.now());
         deckRepository.save(deck);
         return "redirect:/view/decks";
     }
