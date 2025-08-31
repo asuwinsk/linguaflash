@@ -45,6 +45,20 @@ public class DeckTagController {
         return "Deck tag added successfully";
     }
 
+    // udpate a deck tag
+    @PutMapping("/update/{id}")
+    public String updateDeckTag(@PathVariable Long id, @RequestBody DeckTagRequestDTO deckTagDTO) {
+        Optional<DeckTag> existingDeckTag = deckTagService.findById(id);
+        if (existingDeckTag.isEmpty()) {
+            return "Deck tag not found";
+        }
+        DeckTag deckTagToUpdate = existingDeckTag.get();
+        deckTagToUpdate.setName(deckTagDTO.getName());
+        deckTagToUpdate.setDescription(deckTagDTO.getDescription());
+        deckTagService.save(deckTagToUpdate);
+        return "Deck tag updated successfully";
+    }
+
     // remove a deck tag
     @DeleteMapping("/remove/{id}")
     public String removeDeckTag(@PathVariable Long id) {

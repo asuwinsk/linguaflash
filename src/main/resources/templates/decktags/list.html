@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <title>Deck Tags List</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .thick-border {
+            border: 3px solid #343a40 !important;
+        }
+        .thick-border th, .thick-border td {
+            border: 2px solid #343a40 !important;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -11,17 +19,22 @@
     <div class="mb-3">
         <span th:text="'Loaded decktags: ' + ${#lists.size(decktags)}"></span>
     </div>
-    <table class="table table-striped table-bordered" th:if="${decktags}">
+    <div class="mb-3">
+        <a href="/view/decktags/add" class="btn btn-success">Add new deck tag</a>
+    </div>
+    <table class="table table-striped table-bordered thick-border" th:if="${decktags}">
         <thead class="table-primary">
             <tr>
-                <th>#</th>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="decktag, iterStat : ${decktags}">
-                <td th:text="${iterStat.count}"></td>
+                <td>
+                    <a th:href="@{/view/decktags/{id}(id=${decktag.id})}" th:text="${decktag.id}"></a>
+                </td>
                 <td th:text="${decktag.name}"></td>
                 <td th:text="${decktag.description}"></td>
             </tr>
@@ -33,4 +46,3 @@
 </div>
 </body>
 </html>
-
