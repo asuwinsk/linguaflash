@@ -29,20 +29,36 @@ public class FlashcardViewController {
     }
 
     @GetMapping("/add")
-    public String addForm(Model model) {
+    public String addForm(@RequestParam(name = "error", required = false) String error, Model model) {
         model.addAttribute("flashcard", new Flashcard());
+        if (error != null) {
+            model.addAttribute("error", true);
+        } else {
+            model.addAttribute("error", false);
+        }
         return "flashcards/form";
     }
 
     @PostMapping("/add")
     public String addFlashcard(@ModelAttribute Flashcard flashcard) {
+        if (flashcard.getFront() == null || flashcard.getFront().trim().isEmpty() ||
+                flashcard.getBack() == null || flashcard.getBack().trim().isEmpty() ||
+                flashcard.getExampleSentence() == null || flashcard.getExampleSentence().trim().isEmpty() ||
+                flashcard.getLevel() == null) {
+            return "redirect:/view/flashcards/add" + "?error=true";
+        }
         flashcardRepository.save(flashcard);
         return "redirect:/view/flashcards";
     }
 
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id, Model model) {
+    public String editForm(@PathVariable Long id, @RequestParam(name = "error", required = false) String error, Model model) {
         model.addAttribute("flashcard", flashcardRepository.findById(id).orElse(null));
+        if (error != null) {
+            model.addAttribute("error", true);
+        } else {
+            model.addAttribute("error", false);
+        }
         return "flashcards/edit";
     }
 
@@ -50,8 +66,19 @@ public class FlashcardViewController {
     public String editFlashcard(@PathVariable Long id, @ModelAttribute Flashcard flashcard) {
         Flashcard existing = flashcardRepository.findById(id).orElse(null);
         if (existing != null) {
+            if (
+                    flashcard.getFront() == null || flashcard.getFront().trim().isEmpty() ||
+                            flashcard.getBack() == null || flashcard.getBack().trim().isEmpty() ||
+                            flashcard.getExampleSentence() == null || flashcard.getExampleSentence().trim().isEmpty() ||
+                            flashcard.getLevel() == null
+            ) {
+                return "redirect:/view/flashcards/edit/" + id + "?error=true";
+            }
+
             existing.setFront(flashcard.getFront());
             existing.setBack(flashcard.getBack());
+            existing.setExampleSentence(flashcard.getExampleSentence());
+            existing.setLevel(flashcard.getLevel());
             flashcardRepository.save(existing);
         }
         return "redirect:/view/flashcards";
