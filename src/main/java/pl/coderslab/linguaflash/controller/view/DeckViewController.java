@@ -12,7 +12,6 @@ import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
 import pl.coderslab.linguaflash.repository.LanguageRepository;
-import java.time.LocalDateTime;
 
 
 @Controller
@@ -42,35 +41,6 @@ public class DeckViewController {
         return "decks/view";
     }
 
-//    @GetMapping("/add")
-//    public String addForm(@RequestParam(name = "error", required = false) String error, Model model) {
-//        model.addAttribute("languages", languageRepository.findAll());
-//        model.addAttribute("deckTags", deckTagRepository.findAll());
-//        model.addAttribute("deck", new Deck());
-//        if (error != null) {
-//            model.addAttribute("error", true);
-//        } else {
-//            model.addAttribute("error", false);
-//        }
-//        return "decks/form";
-//    }
-
-//    @PostMapping("/add")
-//    public String addDeck(@ModelAttribute Deck deck) {
-//        if (
-//                deck.getName() == null || deck.getName().trim().isEmpty() ||
-//                deck.getDescription() == null || deck.getDescription().trim().isEmpty() ||
-//                deck.getSourceLanguage() == null ||
-//                deck.getTargetLanguage() == null
-//              || deck.getDeckTag() == null
-//        ) {
-//            return "redirect:/view/decks/add?error=true";
-//        }
-//        deck.setDateCreated(LocalDateTime.now());
-//        deckRepository.save(deck);
-//        return "redirect:/view/decks";
-//    }
-
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("languages", languageRepository.findAll());
@@ -82,55 +52,56 @@ public class DeckViewController {
     @PostMapping("/add")
     public String addDeck(@Valid @ModelAttribute("deck") Deck deck,
                           BindingResult bindingResult,
-                          Model model) {
+                          Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
             model.addAttribute("deckTags", deckTagRepository.findAll());
             model.addAttribute("error", true);
             return "decks/form";
         }
+        redirectAttributes.addFlashAttribute("success", "Deck added successfully");
         deckRepository.save(deck);
         return "redirect:/view/decks";
     }
 
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Long id, @RequestParam(name = "error", required = false) String error, Model model) {
-        model.addAttribute("deck", deckRepository.findById(id).orElse(null));
+    public String editForm(@PathVariable Long id, Model model) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+        model.addAttribute("deck", deck);
         model.addAttribute("languages", languageRepository.findAll());
         model.addAttribute("deckTags", deckTagRepository.findAll());
-        if (error != null) {
-            model.addAttribute("error", true);
-        } else {
-            model.addAttribute("error", false);
-        }
         return "decks/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editDeck(@PathVariable Long id, @ModelAttribute Deck deck) {
-        Deck existing = deckRepository.findById(id).orElse(null);
-        if (existing != null) {
-            if (deck.getName() == null || deck.getName().trim().isEmpty() ||
-                    deck.getDescription() == null || deck.getDescription().trim().isEmpty() ||
-                    deck.getSourceLanguage() == null ||
-                    deck.getTargetLanguage() == null
-                    || deck.getDeckTag() == null
-            ) {
-                return "redirect:/view/decks/edit/" + id + "?error=true";
-            }
-            existing.setName(deck.getName());
-            existing.setDescription(deck.getDescription());
-            existing.setSourceLanguage(deck.getSourceLanguage());
-            existing.setTargetLanguage(deck.getTargetLanguage());
-            existing.setDeckTag(deck.getDeckTag());
-            deckRepository.save(existing);
+    public String editDeck(@PathVariable Long id, @Valid @ModelAttribute("deck") Deck deck,
+                           BindingResult bindingResult, Model model,
+                           RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("languages", languageRepository.findAll());
+            model.addAttribute("deckTags", deckTagRepository.findAll());
+            model.addAttribute("error", true);
+            return "decks/edit";
         }
+        Deck existing = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+        existing.setName(deck.getName());
+        existing.setDescription(deck.getDescription());
+        existing.setSourceLanguage(deck.getSourceLanguage());
+        existing.setTargetLanguage(deck.getTargetLanguage());
+        existing.setDeckTag(deck.getDeckTag());
+        deckRepository.save(existing);
+        redirectAttributes.addFlashAttribute("success", "Deck updated successfully");
         return "redirect:/view/decks";
     }
 
     @GetMapping("/remove/{id}")
-    public String removeDeck(@PathVariable Long id) {
-        deckRepository.deleteById(id);
+    public String removeDeck(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+        redirectAttributes.addFlashAttribute("success", "Deck removed successfully");
+        deckRepository.delete(deck);
         return "redirect:/view/decks";
     }
 }

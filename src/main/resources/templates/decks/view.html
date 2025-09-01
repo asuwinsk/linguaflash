@@ -39,7 +39,7 @@
       </tr>
       <tr>
         <th class="table-primary">Date Created</th>
-        <td th:text="${deck.dateCreated}"></td>
+        <td th:text="${#temporals.format(deck.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
       </tr>
       <tr>
         <th class="table-primary">Source Language</th>

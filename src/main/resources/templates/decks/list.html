@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="container mt-5">
+  <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
   <h1 class="mb-4 text-center">Decks</h1>
   <div class="mb-3">
     <span th:text="'Loaded decks: ' + ${#lists.size(decks)}"></span>

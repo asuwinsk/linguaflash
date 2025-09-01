@@ -1,5 +1,6 @@
 package pl.coderslab.linguaflash.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,8 +22,9 @@ public class Deck {
     private Long id;
     @NotBlank(message = "Name cannot be null")
     private String name;
-    @NotBlank
+    @NotBlank(message = "Description cannot be null")
     private String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
     private LocalDateTime dateCreated;
     @ManyToOne
     @JoinColumn(name = "source_language_id")
@@ -42,4 +44,11 @@ public class Deck {
             joinColumns = @JoinColumn(name = "deck_id"),
             inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;
+
+    @PrePersist
+    void onCreate() {
+        if (dateCreated == null) {
+            dateCreated = LocalDateTime.now();
+        }
+    }
 }
