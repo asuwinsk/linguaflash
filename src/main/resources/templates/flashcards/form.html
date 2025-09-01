@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Flashcard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        Please populate all fields.
+    </div>
+    <h1 class="mb-4 text-center">Add Flashcard</h1>
+    <form th:action="@{/view/flashcards/add}" th:object="${flashcard}" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="front" class="form-label">Front</label>
+            <input type="text" th:field="*{front}" id="front" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="back" class="form-label">Back</label>
+            <input type="text" th:field="*{back}" id="back" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="exampleSentence" class="form-label">Example Sentence</label>
+            <input type="text" th:field="*{exampleSentence}" id="exampleSentence" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="level" class="form-label">Level</label>
+            <select th:field="*{level}" id="level" class="form-select" required>
+                <option value="BEGINNER">BEGINNER</option>
+                <option value="INTERMEDIATE">INTERMEDIATE</option>
+                <option value="ADVANCED">ADVANCED</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Flashcard</button>
+        <a href="/view/flashcards" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
