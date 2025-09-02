@@ -13,6 +13,12 @@
     <div th:if="${invalidLang}" class="alert alert-danger" role="alert">
         Source language and target language must be different.
     </div>
+    <div th:if="${exceedLengthName}" class="alert alert-danger" role="alert">
+        Name cannot exceed the length of 100 characters.
+    </div>
+    <div th:if="${exceedLengthDesc}" class="alert alert-danger" role="alert">
+        Description cannot exceed the length of 255 characters.
+    </div>
     <h1 class="mb-4 text-center">Edit Deck</h1>
     <form th:action="@{/view/decks/edit/{id}(id=${deck.id})}" th:object="${deck}" method="post" class="needs-validation" novalidate>
         <div class="mb-3">

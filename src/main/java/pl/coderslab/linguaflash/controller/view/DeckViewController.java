@@ -100,6 +100,15 @@ public class DeckViewController {
                     && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
                 model.addAttribute("invalidLang", true);
             }
+
+            // validation size of name
+            if (deck.getName().length() > 100) {
+                model.addAttribute("exceedLengthName", true);
+            }
+            // validation size of description
+            if (deck.getDescription().length() > 255) {
+                model.addAttribute("exceedLengthDesc", true);
+            }
             return "decks/form";
         }
         redirectAttributes.addFlashAttribute("success", "Deck added successfully");
@@ -141,6 +150,16 @@ public class DeckViewController {
                     && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
                 model.addAttribute("invalidLang", true);
             }
+
+            // validation size of name
+            if (deck.getName().length() > 100) {
+                model.addAttribute("exceedLengthName", true);
+            }
+
+            // validation size of description
+            if (deck.getDescription().length() > 255) {
+                model.addAttribute("exceedLengthDesc", true);
+            }
             return "decks/edit";
         }
         Deck existing = deckRepository.findById(id)
@@ -159,7 +178,7 @@ public class DeckViewController {
     public String removeDeck(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
-        redirectAttributes.addFlashAttribute("success", "Deck removed successfully");
+        redirectAttributes.addFlashAttribute("success", "Deck deleted successfully");
         deckRepository.delete(deck);
         return "redirect:/view/decks";
     }

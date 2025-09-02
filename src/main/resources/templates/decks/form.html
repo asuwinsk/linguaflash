@@ -10,6 +10,12 @@
     <div th:if="${error}" class="alert alert-danger" role="alert">
         Please populate all required fields.
     </div>
+    <div th:if="${exceedLengthName}" class="alert alert-danger" role="alert">
+        Name cannot exceed the length of 100 characters.
+    </div>
+    <div th:if="${exceedLengthDesc}" class="alert alert-danger" role="alert">
+        Description cannot exceed the length of 255 characters.
+    </div>
     <div th:if="${invalidLang}" class="alert alert-danger" role="alert">
         Source language and target language must be different.
     </div>
