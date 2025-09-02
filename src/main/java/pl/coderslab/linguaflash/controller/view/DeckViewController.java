@@ -56,7 +56,23 @@ public class DeckViewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
             model.addAttribute("deckTags", deckTagRepository.findAll());
-            model.addAttribute("error", true);
+
+            // validation missing fields
+            if (deck.getName() == null || deck.getName().isEmpty() ||
+                    deck.getDescription() == null || deck.getDescription().isEmpty() ||
+                    deck.getSourceLanguage() == null ||
+                    deck.getTargetLanguage() == null ||
+                    deck.getDeckTag() == null) {
+                model.addAttribute("error", true);
+            }
+
+            // validation languages
+            if (deck.getSourceLanguage() != null && deck.getTargetLanguage() != null
+                    && deck.getSourceLanguage().getId() != null
+                    && deck.getTargetLanguage().getId() != null
+                    && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
+                model.addAttribute("invalidLang", true);
+            }
             return "decks/form";
         }
         redirectAttributes.addFlashAttribute("success", "Deck added successfully");
@@ -81,7 +97,23 @@ public class DeckViewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
             model.addAttribute("deckTags", deckTagRepository.findAll());
-            model.addAttribute("error", true);
+
+            // validation missing fields
+            if (deck.getName() == null || deck.getName().isEmpty() ||
+                deck.getDescription() == null || deck.getDescription().isEmpty() ||
+                deck.getSourceLanguage() == null ||
+                deck.getTargetLanguage() == null ||
+                deck.getDeckTag() == null) {
+                model.addAttribute("error", true);
+            }
+
+            // validation languages
+            if (deck.getSourceLanguage() != null && deck.getTargetLanguage() != null
+                    && deck.getSourceLanguage().getId() != null
+                    && deck.getTargetLanguage().getId() != null
+                    && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
+                model.addAttribute("invalidLang", true);
+            }
             return "decks/edit";
         }
         Deck existing = deckRepository.findById(id)

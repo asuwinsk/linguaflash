@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import pl.coderslab.linguaflash.validation.DifferentLanguages;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DifferentLanguages
 public class Deck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
