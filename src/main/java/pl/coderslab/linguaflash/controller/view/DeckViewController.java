@@ -1,6 +1,10 @@
 package pl.coderslab.linguaflash.controller.view;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +16,8 @@ import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
 import pl.coderslab.linguaflash.repository.LanguageRepository;
+
+import java.util.Map;
 
 
 @Controller
@@ -28,8 +34,29 @@ public class DeckViewController {
     }
 
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("decks", deckRepository.findAll());
+    public String listAll(@RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
+                          @RequestParam(defaultValue = "name") String sort,
+                          @RequestParam(defaultValue = "desc") String dir,
+                          Model model) {
+
+        Map<String, String> allowedSorts = Map.of(
+                "id", "id",
+                "name", "name"
+        );
+
+        String sortPath = allowedSorts.getOrDefault(sort, "name");
+        Sort.Direction direction = "desc".equalsIgnoreCase(dir) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortPath));
+        Page<Deck> decksPage = deckRepository.findAll(pageable);
+
+
+        model.addAttribute("decksPage", decksPage);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDir", dir);
+        model.addAttribute("pageSize", size);
+//        model.addAttribute("decks", deckRepository.findAll());
         return "decks/list";
     }
 
