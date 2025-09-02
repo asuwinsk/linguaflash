@@ -7,6 +7,15 @@
 </head>
 <body>
 <div class="container mt-5">
+    <div th:if="${error}" class="alert alert-danger" role="alert">
+        Please populate all required fields.
+    </div>
+    <div th:if="${exceedLengthName}" class="alert alert-danger" role="alert">
+        Name cannot exceed the length of 100 characters.
+    </div>
+    <div th:if="${exceedLengthDesc}" class="alert alert-danger" role="alert">
+        Description cannot exceed the length of 255 characters.
+    </div>
     <h1 class="mb-4 text-center">Add DeckTag</h1>
     <form th:action="@{/view/decktags/add}" th:object="${decktag}" method="post" class="needs-validation" novalidate>
         <div class="mb-3">

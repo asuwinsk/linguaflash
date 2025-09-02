@@ -1,6 +1,10 @@
 package pl.coderslab.linguaflash.controller.view;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +16,8 @@ import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
 import pl.coderslab.linguaflash.repository.LanguageRepository;
+
+import java.util.Map;
 
 
 @Controller
@@ -28,8 +34,29 @@ public class DeckViewController {
     }
 
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("decks", deckRepository.findAll());
+    public String listAll(@RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
+                          @RequestParam(defaultValue = "name") String sort,
+                          @RequestParam(defaultValue = "desc") String dir,
+                          Model model) {
+
+        Map<String, String> allowedSorts = Map.of(
+                "id", "id",
+                "name", "name"
+        );
+
+        String sortPath = allowedSorts.getOrDefault(sort, "name");
+        Sort.Direction direction = "desc".equalsIgnoreCase(dir) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortPath));
+        Page<Deck> decksPage = deckRepository.findAll(pageable);
+
+
+        model.addAttribute("decksPage", decksPage);
+        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentDir", dir);
+        model.addAttribute("pageSize", size);
+//        model.addAttribute("decks", deckRepository.findAll());
         return "decks/list";
     }
 
@@ -56,7 +83,32 @@ public class DeckViewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
             model.addAttribute("deckTags", deckTagRepository.findAll());
-            model.addAttribute("error", true);
+
+            // validation missing fields
+            if (deck.getName() == null || deck.getName().isEmpty() ||
+                    deck.getDescription() == null || deck.getDescription().isEmpty() ||
+                    deck.getSourceLanguage() == null ||
+                    deck.getTargetLanguage() == null ||
+                    deck.getDeckTag() == null) {
+                model.addAttribute("error", true);
+            }
+
+            // validation languages
+            if (deck.getSourceLanguage() != null && deck.getTargetLanguage() != null
+                    && deck.getSourceLanguage().getId() != null
+                    && deck.getTargetLanguage().getId() != null
+                    && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
+                model.addAttribute("invalidLang", true);
+            }
+
+            // validation size of name
+            if (deck.getName().length() > 100) {
+                model.addAttribute("exceedLengthName", true);
+            }
+            // validation size of description
+            if (deck.getDescription().length() > 255) {
+                model.addAttribute("exceedLengthDesc", true);
+            }
             return "decks/form";
         }
         redirectAttributes.addFlashAttribute("success", "Deck added successfully");
@@ -81,7 +133,33 @@ public class DeckViewController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("languages", languageRepository.findAll());
             model.addAttribute("deckTags", deckTagRepository.findAll());
-            model.addAttribute("error", true);
+
+            // validation missing fields
+            if (deck.getName() == null || deck.getName().isEmpty() ||
+                deck.getDescription() == null || deck.getDescription().isEmpty() ||
+                deck.getSourceLanguage() == null ||
+                deck.getTargetLanguage() == null ||
+                deck.getDeckTag() == null) {
+                model.addAttribute("error", true);
+            }
+
+            // validation languages
+            if (deck.getSourceLanguage() != null && deck.getTargetLanguage() != null
+                    && deck.getSourceLanguage().getId() != null
+                    && deck.getTargetLanguage().getId() != null
+                    && deck.getSourceLanguage().getId().equals(deck.getTargetLanguage().getId())) {
+                model.addAttribute("invalidLang", true);
+            }
+
+            // validation size of name
+            if (deck.getName().length() > 100) {
+                model.addAttribute("exceedLengthName", true);
+            }
+
+            // validation size of description
+            if (deck.getDescription().length() > 255) {
+                model.addAttribute("exceedLengthDesc", true);
+            }
             return "decks/edit";
         }
         Deck existing = deckRepository.findById(id)
@@ -100,7 +178,7 @@ public class DeckViewController {
     public String removeDeck(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
-        redirectAttributes.addFlashAttribute("success", "Deck removed successfully");
+        redirectAttributes.addFlashAttribute("success", "Deck deleted successfully");
         deckRepository.delete(deck);
         return "redirect:/view/decks";
     }

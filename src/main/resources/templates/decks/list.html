@@ -16,35 +16,93 @@
 <body>
 <div class="container mt-5">
   <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
   <h1 class="mb-4 text-center">Decks</h1>
-  <div class="mb-3">
-    <span th:text="'Loaded decks: ' + ${#lists.size(decks)}"></span>
+  <div class="mb-3" th:if="${decksPage}">
+    <span>
+      Loaded decks:
+      <strong th:text="${decksPage.numberOfElements}">0</strong>
+      of
+      <strong th:text="${decksPage.totalElements}">0</strong>
+      (page <span th:text="${decksPage.number + 1}">1</span>
+      / <span th:text="${decksPage.totalPages == 0 ? 1 : decksPage.totalPages}">1</span>)
+    </span>
   </div>
+
   <div class="mb-3">
     <a href="/view/decks/add" class="btn btn-success">Add new deck</a>
   </div>
-  <table class="table table-striped table-bordered thick-border" th:if="${decks}">
+
+  <table class="table table-striped table-bordered thick-border"
+         th:if="${decksPage != null and decksPage.numberOfElements > 0}">
     <thead class="table-primary">
     <tr>
-      <th>ID</th>
-      <th>Name</th>
+      <th>
+        <a th:href="@{|/view/decks?page=0&size=${pageSize}&sort=id&dir=${currentSort=='id' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+          ID
+          <span class="sort-caret" th:if="${currentSort=='id'}"
+                th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+        </a>
+      </th>
+      <th>
+        <a th:href="@{|/view/decks?page=0&size=${pageSize}&sort=name&dir=${currentSort=='name' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+          Name
+          <span class="sort-caret" th:if="${currentSort=='name'}"
+                th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+        </a>
+      </th>
       <th>Description</th>
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="deck : ${decks}">
+    <tr th:each="deck : ${decksPage.content}">
       <td>
         <a th:href="@{/view/decks/{id}(id=${deck.id})}" th:text="${deck.id}"></a>
       </td>
       <td th:text="${deck.name}"></td>
       <td th:text="${deck.description}"></td>
+      <td>
+        <a th:href="@{|/view/decks/${deck.id}|}" class="btn btn-sm btn-outline-secondary">View</a>
+        <a th:href="@{|/view/decks/edit/${deck.id}|}" class="btn btn-sm btn-primary">Edit</a>
+        <a th:href="@{|/view/decks/remove/${deck.id}|}" class="btn btn-sm btn-danger"
+           onclick="return confirm('Remove deck?');">Delete</a>
+      </td>
     </tr>
     </tbody>
   </table>
-  <div th:if="${#lists.isEmpty(decks)}" class="alert alert-warning">
+
+  <div th:if="${decksPage != null and decksPage.totalElements == 0}" class="alert alert-warning">
     No decks found.
   </div>
-</div>
 
+  <!-- Paginacja -->
+  <nav th:if="${decksPage != null and decksPage.totalPages > 1}" aria-label="Decks pagination">
+    <ul class="pagination">
+      <li class="page-item" th:classappend="${decksPage.first} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{|/view/decks?page=${decksPage.number - 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+          Previous
+        </a>
+      </li>
+
+      <li class="page-item"
+          th:each="i : ${#numbers.sequence(0, decksPage.totalPages - 1)}"
+          th:classappend="${i == decksPage.number} ? 'active'">
+        <a class="page-link"
+           th:text="${i + 1}"
+           th:href="@{|/view/decks?page=${i}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+        </a>
+      </li>
+
+      <li class="page-item" th:classappend="${decksPage.last} ? 'disabled'">
+        <a class="page-link"
+           th:href="@{|/view/decks?page=${decksPage.number + 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+          Next
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
 </body>
 </html>
