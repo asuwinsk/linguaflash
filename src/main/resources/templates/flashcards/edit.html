@@ -9,7 +9,16 @@
 <div class="container mt-5">
   <!-- Error banner -->
   <div th:if="${error}" class="alert alert-danger" role="alert">
-    Please populate all fields.
+    Please populate all required fields.
+  </div>
+  <div th:if="${exceedLengthFront}" class="alert alert-danger" role="alert">
+    Front value cannot exceed the length of 100 characters.
+  </div>
+  <div th:if="${exceedLengthBack}" class="alert alert-danger" role="alert">
+    Back value cannot exceed the length of 100 characters.
+  </div>
+  <div th:if="${exceedLengthSentence}" class="alert alert-danger" role="alert">
+    Example sentence cannot exceed the length of 255 characters.
   </div>
   <h1 class="mb-4 text-center">Edit Flashcard</h1>
   <form th:action="@{/view/flashcards/edit/{id}(id=${flashcard.id})}" th:object="${flashcard}" method="post" class="needs-validation" novalidate>

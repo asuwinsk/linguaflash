@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.coderslab.linguaflash.model.Deck;
+import pl.coderslab.linguaflash.model.Flashcard;
 import pl.coderslab.linguaflash.repository.DeckRepository;
 import pl.coderslab.linguaflash.repository.DeckTagRepository;
+import pl.coderslab.linguaflash.repository.FlashcardRepository;
 import pl.coderslab.linguaflash.repository.LanguageRepository;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -26,11 +29,13 @@ public class DeckViewController {
     private final DeckRepository deckRepository;
     private final LanguageRepository languageRepository;
     private final DeckTagRepository deckTagRepository;
+    private final FlashcardRepository flashcardRepository;
 
-    public DeckViewController(DeckRepository deckRepository, LanguageRepository languageRepository, DeckTagRepository deckTagRepository) {
+    public DeckViewController(DeckRepository deckRepository, LanguageRepository languageRepository, DeckTagRepository deckTagRepository, FlashcardRepository flashcardRepository) {
         this.deckRepository = deckRepository;
         this.languageRepository = languageRepository;
         this.deckTagRepository = deckTagRepository;
+        this.flashcardRepository = flashcardRepository;
     }
 
     @GetMapping
@@ -136,10 +141,10 @@ public class DeckViewController {
 
             // validation missing fields
             if (deck.getName() == null || deck.getName().isEmpty() ||
-                deck.getDescription() == null || deck.getDescription().isEmpty() ||
-                deck.getSourceLanguage() == null ||
-                deck.getTargetLanguage() == null ||
-                deck.getDeckTag() == null) {
+                    deck.getDescription() == null || deck.getDescription().isEmpty() ||
+                    deck.getSourceLanguage() == null ||
+                    deck.getTargetLanguage() == null ||
+                    deck.getDeckTag() == null) {
                 model.addAttribute("error", true);
             }
 
@@ -174,12 +179,69 @@ public class DeckViewController {
         return "redirect:/view/decks";
     }
 
-    @GetMapping("/remove/{id}")
-    public String removeDeck(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    @GetMapping("/delete/{id}")
+    public String deleteDeck(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
         redirectAttributes.addFlashAttribute("success", "Deck deleted successfully");
         deckRepository.delete(deck);
         return "redirect:/view/decks";
+    }
+
+    // flashcards endpoints
+
+    @GetMapping("/{id}/flashcards")
+    public String viewFlashcardsInDeck(@PathVariable Long id, Model model) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        model.addAttribute("deck", deck);
+        model.addAttribute("flashcards", deck.getFlashcards());
+        return "flashcards/in-deck";
+    }
+
+    @GetMapping("/{id}/flashcards/select")
+    public String selectFlashcardsForm(@PathVariable Long id, Model model) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        model.addAttribute("flashcards", flashcardRepository.findAll());
+        model.addAttribute("deck", deck);
+        return "flashcards/select";
+    }
+
+    @PostMapping("/{id}/flashcards/select")
+    public String addFlashcardsToDeck(@PathVariable Long id,
+                                      @RequestParam("flashcardIds") List<Long> flashcardIds,
+                                      RedirectAttributes redirectAttributes) {
+
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        List<Flashcard> selected = flashcardRepository.findAllById(flashcardIds);
+        deck.getFlashcards().addAll(selected);
+        deckRepository.save(deck);
+
+        redirectAttributes.addFlashAttribute("success", "Flashcards added successfully");
+        return "redirect:/view/decks/" + id + "/flashcards";
+    }
+
+    @GetMapping("/{id}/flashcards/delete/{flashcardId}")
+    public String deleteFlashcardFromDeck(@PathVariable Long id,
+                                          @PathVariable Long flashcardId,
+                                          RedirectAttributes redirectAttributes) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        Flashcard flashcardToRemove = deck.getFlashcards().stream()
+                .filter(f -> f.getId().equals(flashcardId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Flashcard not found in this deck"));
+
+        deck.getFlashcards().remove(flashcardToRemove);
+        deckRepository.save(deck);
+
+        redirectAttributes.addFlashAttribute("success", "Flashcard deleted successfully");
+        return "redirect:/view/decks/" + id + "/flashcards";
     }
 }
