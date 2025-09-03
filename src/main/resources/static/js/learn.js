@@ -60,7 +60,7 @@
         // ustaw badge z levelem (na tylnej stronie)
         setBadge(c.level);
 
-        counterEl.textContent = `Fiszka ${idx + 1} / ${order.length}`;
+        counterEl.textContent = `Flashcard ${idx + 1} / ${order.length}`;
         cardEl.classList.toggle('is-flipped', flipped);
     }
 

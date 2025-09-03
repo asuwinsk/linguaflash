@@ -8,7 +8,10 @@
     <link rel="stylesheet"
           th:href="@{/css/learn.css}">
 </head>
-<body>
+<body class="learn-bg">
+<div class="bg-overlay"></div>
+<div class="container py-4 position-relative">
+
 <div class="container py-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -27,12 +30,16 @@
 
         <div class="scene">
             <div id="card" class="card3d">
-                <div id="face-front" class="card-face card-front"></div>
+                <div class="card-face card-front">
+                    <div class="w-100 text-center">
+                        <div id="face-front" class="display-6"></div>
+                    </div>
+                </div>
 <!--                <div id="face-back" class="card-face card-back"></div>-->
-                <div class="card-face card-back position-relative">
+                <div class="card-face card-back">
                     <span id="levelBadge" class="level-badge text-white bg-secondary">LEVEL</span>
                     <div class="w-100 text-center">
-                        <div id="face-back" class="display-6 mb-3"></div>
+                        <div id="face-back" class="display-6"></div>
                     </div>
                 </div>
             </div>
@@ -60,5 +67,5 @@
 </div>
 
 <script th:src="@{/js/learn.js}" defer></script>
-</body>
+</div></body>
 </html>
