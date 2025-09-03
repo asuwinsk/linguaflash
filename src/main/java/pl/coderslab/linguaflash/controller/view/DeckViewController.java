@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -191,12 +192,34 @@ public class DeckViewController {
     // flashcards endpoints
 
     @GetMapping("/{id}/flashcards")
-    public String viewFlashcardsInDeck(@PathVariable Long id, Model model) {
+    public String viewFlashcardsInDeck(@PathVariable Long id,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "id") String sort,
+                                       @RequestParam(defaultValue = "desc") String dir,
+                                       Model model) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
 
+        Map<String, String> allowedSorts = Map.of(
+                "id", "f.id",
+                "front", "f.front",
+                "back", "f.back"
+        );
+        String sortPath = allowedSorts.getOrDefault(sort.toLowerCase(), "f.id");
+        Sort.Direction direction = "desc".equalsIgnoreCase(dir) ? Sort.Direction.DESC : Sort.Direction.ASC;
+
+        Sort sortSpec = JpaSort.unsafe(direction, sortPath);
+        Pageable pageable = PageRequest.of(page, size, sortSpec);
+
+        Page<Flashcard> flashcardsPage = flashcardRepository.findByDeckId(id, pageable);
+
         model.addAttribute("deck", deck);
-        model.addAttribute("flashcards", deck.getFlashcards());
+        model.addAttribute("flashcardsPage", flashcardsPage);
+        model.addAttribute("currentSort", sort.toLowerCase());
+        model.addAttribute("currentDir", dir.toLowerCase());
+        model.addAttribute("pageSize", size);
+
         return "flashcards/in-deck";
     }
 
@@ -205,8 +228,14 @@ public class DeckViewController {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
 
-        model.addAttribute("flashcards", flashcardRepository.findAll());
+        // jeśli chcesz nie pokazywać fiszek już w decku:
+        List<Flashcard> all = flashcardRepository.findAll();
+        var already = deck.getFlashcards()
+                .stream().map(Flashcard::getId).collect(java.util.stream.Collectors.toSet());
+        all.removeIf(f -> already.contains(f.getId()));
+
         model.addAttribute("deck", deck);
+        model.addAttribute("flashcards", all); // lub flashcardRepository.findAll() jeśli nie filtrujesz
         return "flashcards/select";
     }
 
