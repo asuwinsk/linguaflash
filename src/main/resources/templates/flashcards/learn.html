@@ -28,7 +28,13 @@
         <div class="scene">
             <div id="card" class="card3d">
                 <div id="face-front" class="card-face card-front"></div>
-                <div id="face-back" class="card-face card-back"></div>
+<!--                <div id="face-back" class="card-face card-back"></div>-->
+                <div class="card-face card-back position-relative">
+                    <span id="levelBadge" class="level-badge text-white bg-secondary">LEVEL</span>
+                    <div class="w-100 text-center">
+                        <div id="face-back" class="display-6 mb-3"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -47,7 +53,7 @@
         <div id="cardsData" class="d-none">
             <div class="card-data"
                  th:each="f : ${flashcards}"
-                 th:attr="data-id=${f.id}, data-front=${f.front}, data-back=${f.back}">
+                 th:attr="data-id=${f.id}, data-front=${f.front}, data-back=${f.back}, data-level=${f.level}">
             </div>
         </div>
     </div>
