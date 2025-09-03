@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Learning mode — ' + ${deck.name}">Learning mode</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        .scene {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            perspective: 1000px;
+        }
+        .card3d {
+            position: relative;
+            width: 100%;
+            min-height: 220px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            background: #fff;
+        }
+        .card3d.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .card-front {
+            background: #f8f9fa;
+        }
+        .card-back {
+            background: #e7f1ff;
+            transform: rotateY(180deg);
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .counter {
+            text-align: center;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="m-0" th:text="'Learning mode — ' + ${deck.name}">Learning mode</h2>
+        <a th:href="@{|/view/decks/${deck.id}/flashcards|}" class="btn btn-outline-secondary">
+            Back to the list
+        </a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(flashcards)}" class="alert alert-warning">
+        Deck does not have any flashcards.
+    </div>
+
+    <div th:if="${!#lists.isEmpty(flashcards)}">
+        <div id="counter" class="counter"></div>
+
+        <div class="scene">
+            <div id="card" class="card3d">
+                <div id="face-front" class="card-face card-front"></div>
+                <div id="face-back" class="card-face card-back"></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="btn btn-outline-primary">&larr; Previous</button>
+            <button id="flipBtn" class="btn btn-primary">Rotate (Space/Enter)</button>
+            <button id="nextBtn" class="btn btn-outline-primary">Next &rarr;</button>
+
+            <div class="form-check form-switch ms-2">
+                <input class="form-check-input" type="checkbox" id="shuffleToggle">
+                <label class="form-check-label" for="shuffleToggle">Draw</label>
+            </div>
+            <button id="restartBtn" class="btn btn-outline-secondary">Restart</button>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Zasilamy JS danymi z Thymeleaf
+    const cards = [
+        /*[# th:each="f : ${flashcards}"]*/
+        {"id": /*[[${f.id}]]*/, "front": /*[[${f.front}]]*/, "back": /*[[${f.back}]]*/},
+        /*[/]*/
+    ];
+
+    let order = cards.map((_, i) => i);
+    let idx = 0;
+    let flipped = false;
+
+    const cardEl = document.getElementById('card');
+    const frontEl = document.getElementById('face-front');
+    const backEl  = document.getElementById('face-back');
+    const counterEl = document.getElementById('counter');
+
+    function render() {
+        const c = cards[order[idx]];
+        frontEl.textContent = c.front;
+        backEl.textContent  = c.back;
+        counterEl.textContent = `Fiszka ${idx + 1} / ${order.length}`;
+        cardEl.classList.toggle('is-flipped', flipped);
+    }
+
+    function flip() {
+        flipped = !flipped;
+        cardEl.classList.toggle('is-flipped', flipped);
+    }
+
+    function next() {
+        idx = (idx + 1) % order.length;
+        flipped = false;
+        render();
+    }
+
+    function prev() {
+        idx = (idx - 1 + order.length) % order.length;
+        flipped = false;
+        render();
+    }
+
+    function shuffleArray(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+    }
+
+    function restart() {
+        idx = 0;
+        flipped = false;
+        render();
+    }
+
+    document.getElementById('flipBtn').addEventListener('click', flip);
+    document.getElementById('nextBtn').addEventListener('click', next);
+    document.getElementById('prevBtn').addEventListener('click', prev);
+    document.getElementById('restartBtn').addEventListener('click', restart);
+
+    const shuffleToggle = document.getElementById('shuffleToggle');
+    shuffleToggle.addEventListener('change', (e) => {
+        order = cards.map((_, i) => i);
+        if (e.target.checked) shuffleArray(order);
+        restart();
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            flip();
+        } else if (e.key === 'ArrowRight') {
+            next();
+        } else if (e.key === 'ArrowLeft') {
+            prev();
+        }
+    });
+
+    // Inicjalizacja
+    render();
+    /*]]>*/
+</script>
+</body>
+</html>
