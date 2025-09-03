@@ -63,14 +63,16 @@
     </thead>
     <tbody>
     <tr th:each="flashcard : ${flashcardsPage.content}">
-      <td th:text="${flashcard.id}">1</td>
+      <td>
+        <a th:href="@{/view/flashcards/{id}(id=${flashcard.id})}" th:text="${flashcard.id}"></a>
+      </td>
       <td th:text="${flashcard.front}">Front text</td>
       <td th:text="${flashcard.back}">Back text</td>
       <td>
         <a th:href="@{|/view/decks/${deck.id}/flashcards/delete/${flashcard.id}|}"
            class="btn btn-sm btn-danger"
-           onclick="return confirm('Remove this flashcard from the deck?');">
-          Remove
+           onclick="return confirm('Delete this flashcard from the deck?');">
+          Delete
         </a>
       </td>
     </tr>
