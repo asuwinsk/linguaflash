@@ -20,8 +20,10 @@ import pl.coderslab.linguaflash.repository.DeckTagRepository;
 import pl.coderslab.linguaflash.repository.FlashcardRepository;
 import pl.coderslab.linguaflash.repository.LanguageRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -272,5 +274,20 @@ public class DeckViewController {
 
         redirectAttributes.addFlashAttribute("success", "Flashcard deleted successfully");
         return "redirect:/view/decks/" + id + "/flashcards";
+    }
+
+    @GetMapping("{id}/learn")
+    public String learn(@PathVariable Long id, Model model) {
+        Deck deck = deckRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        List<Flashcard> flashcards = deck.getFlashcards()
+                        .stream()
+                        .sorted(Comparator.comparing(Flashcard::getId))
+                        .collect(Collectors.toList());
+
+        model.addAttribute("deck", deck);
+        model.addAttribute("flashcards", flashcards);
+        return "flashcards/learn";
     }
 }

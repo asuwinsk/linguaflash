@@ -32,6 +32,13 @@
       / <span th:text="${flashcardsPage.totalPages == 0 ? 1 : flashcardsPage.totalPages}">1</span>)
     </span>
   </div>
+  <div class="my-4 d-grid" role="navigation" aria-label="Learning actions">
+    <a th:href="@{|/view/decks/${deck.id}/learn|}"
+       class="btn btn-primary btn-lg py-3">
+      Let's Learn!
+    </a>
+  </div>
+
 
   <table class="table table-striped table-bordered thick-border"
          th:if="${flashcardsPage != null and flashcardsPage.numberOfElements > 0}">
@@ -86,9 +93,6 @@
     </a>
     <a th:href="@{|/view/decks/${deck.id}|}" class="btn btn-secondary">Back to Deck</a>
   </div>
-  <a th:href="@{|/view/decks/${deck.id}/learn|}" class="btn btn-primary">
-    Let's Learn!
-  </a>
 
   <div th:if="${flashcardsPage != null and flashcardsPage.totalElements == 0}" class="alert alert-warning">
     No flashcards found in this deck.
