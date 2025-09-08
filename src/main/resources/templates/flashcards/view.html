@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flashcard Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .thick-border {
+            border: 3px solid #343a40 !important;
+        }
+        .thick-border th, .thick-border td {
+            border: 2px solid #343a40 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Flashcard Details</h1>
+    <div th:if="${flashcard != null}">
+        <table class="table thick-border">
+            <thead>
+                <tr>
+                    <th class="table-primary" style="width: 200px;">Field</th>
+                    <th class="table-primary">Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="table-primary">ID</th>
+                    <td th:text="${flashcard.id}"></td>
+                </tr>
+                <tr>
+                    <th class="table-primary">Front</th>
+                    <td th:text="${flashcard.front}"></td>
+                </tr>
+                <tr>
+                    <th class="table-primary">Back</th>
+                    <td th:text="${flashcard.back}"></td>
+                </tr>
+                <tr>
+                    <th class="table-primary">Example Sentence</th>
+                    <td th:text="${flashcard.exampleSentence}"></td>
+                </tr>
+                <tr>
+                    <th class="table-primary">Level</th>
+                    <td th:text="${flashcard.level}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="mt-3">
+            <a th:href="@{/view/flashcards/edit/{id}(id=${flashcard.id})}" class="btn btn-primary me-2">Edit</a>
+            <a th:href="@{/view/flashcards/delete/{id}(id=${flashcard.id})}" class="btn btn-danger me-2">Delete</a>
+            <a href="/view/flashcards" class="btn btn-secondary">Back to list</a>
+        </div>
+    </div>
+    <div th:if="${flashcard == null}" class="alert alert-warning">
+        Flashcard not found.
+    </div>
+</div>
+</body>
+</html>

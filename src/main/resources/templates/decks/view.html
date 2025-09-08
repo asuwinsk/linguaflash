@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Deck Details</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    .thick-border {
+      border: 3px solid #343a40 !important;
+    }
+    .thick-border th, .thick-border td {
+      border: 2px solid #343a40 !important;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+  <h1 class="mb-4 text-center">Deck Details</h1>
+  <div th:if="${deck != null}">
+    <table class="table thick-border">
+      <thead>
+      <tr>
+        <th class="table-primary" style="width: 200px;">Field</th>
+        <th class="table-primary">Value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <th class="table-primary">ID</th>
+        <td th:text="${deck.id}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Name</th>
+        <td th:text="${deck.name}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Description</th>
+        <td th:text="${deck.description}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Date Created</th>
+        <td th:text="${#temporals.format(deck.dateCreated, 'yyyy-MM-dd HH:mm:ss')}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Source Language</th>
+        <td th:text="${deck.sourceLanguage.name}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Target Language</th>
+        <td th:text="${deck.targetLanguage.name}"></td>
+      </tr>
+      <tr>
+        <th class="table-primary">Deck tag</th>
+        <td>
+          <span class="badge rounded-pill bg-primary px-3 py-2" th:text="${deck.deckTag.name}"></span>
+        </td>
+      </tr>
+      <tr>
+        <th class="table-primary">Number of flashcards</th>
+        <td th:text="${deck.flashcards.size()}"></td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="mt-3">
+      <a th:href="@{/view/decks/edit/{id}(id=${deck.id})}" class="btn btn-primary me-2">Edit</a>
+      <a th:href="@{/view/decks/delete/{id}(id=${deck.id})}" class="btn btn-danger me-2">Delete</a>
+      <a href="/view/decks" class="btn btn-secondary">Back to list</a>
+      <a th:href="@{'/view/decks/' + ${deck.id} + '/flashcards'}" class="btn btn-info me-2">View flashcards</a>
+    </div>
+  </div>
+  <div th:if="${deck == null}" class="alert alert-warning">
+    Deck not found.
+  </div>
+</div>
+</body>
+</html>

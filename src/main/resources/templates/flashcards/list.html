@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Flashcard List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .thick-border {
+            border: 3px solid #343a40 !important;
+        }
+        .thick-border th, .thick-border td {
+            border: 2px solid #343a40 !important;
+        }
+        .sort-caret { margin-left: 6px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <h1 class="mb-4 text-center">Flashcards</h1>
+    <div class="mb-3" th:if="${flashcardsPage}">
+    <span>
+      Loaded flashcards:
+      <strong th:text="${flashcardsPage.numberOfElements}">0</strong>
+      of
+      <strong th:text="${flashcardsPage.totalElements}">0</strong>
+      (page <span th:text="${flashcardsPage.number + 1}">1</span>
+      / <span th:text="${flashcardsPage.totalPages == 0 ? 1 : flashcardsPage.totalPages}">1</span>)
+    </span>
+    </div>
+
+    <div class="mb-3">
+        <a href="/view/flashcards/add" class="btn btn-success">Add new flashcard</a>
+    </div>
+
+    <table class="table table-striped table-bordered thick-border"
+           th:if="${flashcardsPage != null and flashcardsPage.numberOfElements > 0}">
+        <thead class="table-primary">
+        <tr>
+            <th>
+                <a th:href="@{|/view/flashcards?page=0&size=${pageSize}&sort=id&dir=${currentSort=='id' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+                    ID
+                    <span class="sort-caret" th:if="${currentSort=='id'}"
+                          th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{|/view/flashcards?page=0&size=${pageSize}&sort=front&dir=${currentSort=='front' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+                    Front
+                    <span class="sort-caret" th:if="${currentSort=='front'}"
+                          th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{|/view/flashcards?page=0&size=${pageSize}&sort=back&dir=${currentSort=='back' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+                    Back
+                    <span class="sort-caret" th:if="${currentSort=='back'}"
+                          th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="flashcard : ${flashcardsPage.content}">
+            <td>
+                <a th:href="@{/view/flashcards/{id}(id=${flashcard.id})}" th:text="${flashcard.id}"></a>
+            </td>
+            <td th:text="${flashcard.front}"></td>
+            <td th:text="${flashcard.back}"></td>
+            <td>
+                <a th:href="@{|/view/flashcards/${flashcard.id}|}" class="btn btn-sm btn-outline-secondary">View</a>
+                <a th:href="@{|/view/flashcards/edit/${flashcard.id}|}" class="btn btn-sm btn-primary">Edit</a>
+                <a th:href="@{|/view/flashcards/delete/${flashcard.id}|}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Delete flashcard?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${flashcardsPage != null and flashcardsPage.totalElements == 0}" class="alert alert-warning">
+        No flashcards found.
+    </div>
+
+    <!-- Paginacja -->
+    <nav th:if="${flashcardsPage != null and flashcardsPage.totalPages > 1}" aria-label="Flashcards pagination">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${flashcardsPage.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/view/flashcards?page=${flashcardsPage.number - 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                    Previous
+                </a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, flashcardsPage.totalPages - 1)}"
+                th:classappend="${i == flashcardsPage.number} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{|/view/flashcards?page=${i}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${flashcardsPage.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/view/flashcards?page=${flashcardsPage.number + 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>

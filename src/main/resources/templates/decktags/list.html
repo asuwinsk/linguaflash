@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Deck Tags List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        .thick-border { border: 3px solid #343a40 !important;
+        }
+        .thick-border th, .thick-border td {
+            border: 2px solid #343a40 !important; }
+        .sort-caret { font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+    <h1 class="mb-4 text-center">Deck Tags</h1>
+    <div class="mb-3" th:if="${decktagsPage}">
+    <span>
+      Loaded deck tags:
+      <strong th:text="${decktagsPage.numberOfElements}">0</strong>
+      of
+      <strong th:text="${decktagsPage.totalElements}">0</strong>
+      (page <span th:text="${decktagsPage.number + 1}">1</span>
+      / <span th:text="${decktagsPage.totalPages == 0 ? 1 : decktagsPage.totalPages}">1</span>)
+    </span>
+    </div>
+
+    <div class="mb-3">
+        <a href="/view/decktags/add" class="btn btn-success">Add new deck tag</a>
+    </div>
+
+    <table class="table table-striped table-bordered thick-border"
+           th:if="${decktagsPage != null and decktagsPage.numberOfElements > 0}">
+        <thead class="table-primary">
+        <tr>
+            <th>
+                <a th:href="@{|/view/decktags?page=0&size=${pageSize}&sort=id&dir=${currentSort=='id' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+                    ID
+                    <span class="sort-caret" th:if="${currentSort=='id'}"
+                          th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>
+                <a th:href="@{|/view/decktags?page=0&size=${pageSize}&sort=name&dir=${currentSort=='name' and currentDir=='asc' ? 'desc' : 'asc'}|}">
+                    Name
+                    <span class="sort-caret" th:if="${currentSort=='name'}"
+                          th:text="${currentDir=='asc' ? '▲' : '▼'}"></span>
+                </a>
+            </th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tag : ${decktagsPage.content}">
+            <td>
+                <a th:href="@{/view/decktags/{id}(id=${tag.id})}" th:text="${tag.id}"></a>
+            </td>
+            <td th:text="${tag.name}"></td>
+            <td th:text="${tag.description}"></td>
+            <td>
+                <a th:href="@{|/view/decktags/${tag.id}|}" class="btn btn-sm btn-outline-secondary">View</a>
+                <a th:href="@{|/view/decktags/edit/${tag.id}|}" class="btn btn-sm btn-primary">Edit</a>
+                <a th:href="@{|/view/decktags/remove/${tag.id}|}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Delete deck tag?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${decktagsPage != null and decktagsPage.totalElements == 0}" class="alert alert-warning">
+        No deck tags found.
+    </div>
+
+    <!-- Paginacja -->
+    <nav th:if="${decktagsPage != null and decktagsPage.totalPages > 1}" aria-label="DeckTags pagination">
+        <ul class="pagination">
+            <li class="page-item" th:classappend="${decktagsPage.first} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/view/decktags?page=${decktagsPage.number - 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                    Previous
+                </a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, decktagsPage.totalPages - 1)}"
+                th:classappend="${i == decktagsPage.number} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{|/view/decktags?page=${i}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${decktagsPage.last} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{|/view/decktags?page=${decktagsPage.number + 1}&size=${pageSize}&sort=${currentSort}&dir=${currentDir}|}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
