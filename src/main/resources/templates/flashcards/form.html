@@ -24,7 +24,7 @@
         <div class="mb-3 row">
             <div class="col">
                 <label for="sourceLang" class="form-label">Source Language</label>
-                <select id="sourceLang" name="sourceLang" class="form-select" required>
+                <select id="sourceLang" th:field="*{sourceLang}" class="form-select" required>
                     <option value="en">English</option>
                     <option value="pl">Polski</option>
                     <option value="de">Deutsch</option>
@@ -35,7 +35,7 @@
             </div>
             <div class="col">
                 <label for="targetLang" class="form-label">Target Language</label>
-                <select id="targetLang" name="targetLang" class="form-select" required>
+                <select id="targetLang" th:field="*{targetLang}" class="form-select" required>
                     <option value="pl">Polski</option>
                     <option value="en">English</option>
                     <option value="de">Deutsch</option>

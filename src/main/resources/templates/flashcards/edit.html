@@ -25,7 +25,7 @@
     <div class="mb-3 row">
       <div class="col">
         <label for="sourceLang" class="form-label">Source Language</label>
-        <select id="sourceLang" name="sourceLang" class="form-select" required>
+        <select id="sourceLang" name="sourceLang" th:field="*{sourceLang}" class="form-select" required>
           <option value="en">English</option>
           <option value="pl">Polski</option>
           <option value="de">Deutsch</option>
@@ -36,7 +36,7 @@
       </div>
       <div class="col">
         <label for="targetLang" class="form-label">Target Language</label>
-        <select id="targetLang" name="targetLang" class="form-select" required>
+        <select id="targetLang" name="targetLang" th:field="*{targetLang}" class="form-select" required>
           <option value="pl">Polski</option>
           <option value="en">English</option>
           <option value="de">Deutsch</option>
@@ -74,7 +74,6 @@
   document.addEventListener("DOMContentLoaded", function () {
     const frontInput = document.getElementById("front");
     const backInput = document.getElementById("back");
-
     const sourceSelect = document.getElementById("sourceLang");
     const targetSelect = document.getElementById("targetLang");
 
@@ -92,37 +91,31 @@
 
       fetch("/api/translate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           q: text,
           source: sourceLang,
           target: targetLang
         })
       })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error("HTTP error " + response.status);
-                }
-                return response.json();
+              .then(res => {
+                if (!res.ok) throw new Error("HTTP error " + res.status);
+                return res.json();
               })
               .then(data => {
                 backInput.value = data.translatedText || "";
               })
-              .catch(error => {
-                console.error("Błąd tłumaczenia:", error);
+              .catch(err => {
+                console.error("Błąd tłumaczenia:", err);
                 backInput.value = "[error]";
               });
     }
 
-    // Wywołanie przy wpisywaniu w pole Front
     frontInput.addEventListener("input", function () {
       clearTimeout(timeoutId);
       timeoutId = setTimeout(fetchTranslation, 400);
     });
 
-    // Wywołanie przy zmianie języka
     sourceSelect.addEventListener("change", fetchTranslation);
     targetSelect.addEventListener("change", fetchTranslation);
   });

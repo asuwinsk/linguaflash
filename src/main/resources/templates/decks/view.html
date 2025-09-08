@@ -52,7 +52,9 @@
       </tr>
       <tr>
         <th class="table-primary">Deck tag</th>
-        <td th:text="${deck.deckTag.name}"></td>
+        <td>
+          <span class="badge rounded-pill bg-primary px-3 py-2" th:text="${deck.deckTag.name}"></span>
+        </td>
       </tr>
       <tr>
         <th class="table-primary">Number of flashcards</th>
@@ -62,7 +64,7 @@
     </table>
     <div class="mt-3">
       <a th:href="@{/view/decks/edit/{id}(id=${deck.id})}" class="btn btn-primary me-2">Edit</a>
-      <a th:href="@{/view/decks/remove/{id}(id=${deck.id})}" class="btn btn-danger me-2">Delete</a>
+      <a th:href="@{/view/decks/delete/{id}(id=${deck.id})}" class="btn btn-danger me-2">Delete</a>
       <a href="/view/decks" class="btn btn-secondary">Back to list</a>
       <a th:href="@{'/view/decks/' + ${deck.id} + '/flashcards'}" class="btn btn-info me-2">View flashcards</a>
     </div>
