@@ -21,6 +21,30 @@
     </div>
     <h1 class="mb-4 text-center">Add Flashcard</h1>
     <form th:action="@{/view/flashcards/add}" th:object="${flashcard}" method="post" class="needs-validation" novalidate>
+        <div class="mb-3 row">
+            <div class="col">
+                <label for="sourceLang" class="form-label">Source Language</label>
+                <select id="sourceLang" name="sourceLang" class="form-select" required>
+                    <option value="en">English</option>
+                    <option value="pl">Polski</option>
+                    <option value="de">Deutsch</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+            <div class="col">
+                <label for="targetLang" class="form-label">Target Language</label>
+                <select id="targetLang" name="targetLang" class="form-select" required>
+                    <option value="pl">Polski</option>
+                    <option value="en">English</option>
+                    <option value="de">Deutsch</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </div>
         <div class="mb-3">
             <label for="front" class="form-label">Front</label>
             <input type="text" th:field="*{front}" id="front" class="form-control" required>
@@ -45,5 +69,60 @@
         <a href="/view/flashcards" class="btn btn-secondary ms-2">Cancel</a>
     </form>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const frontInput = document.getElementById("front");
+        const backInput = document.getElementById("back");
+
+        const sourceSelect = document.getElementById("sourceLang");
+        const targetSelect = document.getElementById("targetLang");
+
+        let timeoutId = null;
+
+        function fetchTranslation() {
+            const text = frontInput.value.trim();
+            const sourceLang = sourceSelect.value;
+            const targetLang = targetSelect.value;
+
+            if (text === "") {
+                backInput.value = "";
+                return;
+            }
+
+            fetch("/api/translate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    q: text,
+                    source: sourceLang,
+                    target: targetLang
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("HTTP error " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    backInput.value = data.translatedText || "";
+                })
+                .catch(error => {
+                    console.error("Błąd tłumaczenia:", error);
+                    backInput.value = "[error]";
+                });
+        }
+
+        frontInput.addEventListener("input", function () {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(fetchTranslation, 400);
+        });
+
+        sourceSelect.addEventListener("change", fetchTranslation);
+        targetSelect.addEventListener("change", fetchTranslation);
+    });
+</script>
 </body>
 </html>

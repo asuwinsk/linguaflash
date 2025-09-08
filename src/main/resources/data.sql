@@ -9,6 +9,56 @@ INSERT INTO languages (code, name) VALUES
     ('fr', 'French'),
     ('es', 'Spanish');
 
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE translations;
+SET FOREIGN_KEY_CHECKS = 1;
+
+INSERT INTO translations (source_text, source_lang, target_text, target_lang)
+VALUES
+    ('Hello', 'en', 'Cześć', 'pl'),
+    ('World', 'en', 'Świat', 'pl'),
+    ('Dog', 'en', 'Pies', 'pl'),
+    ('Cat', 'en', 'Kot', 'pl'),
+    ('Cześć', 'pl', 'Hello', 'en'),
+    ('Świat', 'pl', 'World', 'en'),
+    ('Kot', 'pl', 'Cat', 'en'),
+    ('Pies', 'pl', 'Dog', 'en'),
+    ('Hello', 'en', 'Hallo', 'de'),
+    ('World', 'en', 'Welt', 'de'),
+    ('Dog', 'en', 'Hund', 'de'),
+    ('Cat', 'en', 'Katze', 'de'),
+    ('Hallo', 'de', 'Hello', 'en'),
+    ('Welt', 'de', 'World', 'en'),
+    ('Katze', 'de', 'Cat', 'en'),
+    ('Hund', 'de', 'Dog', 'en'),
+    ('Hello', 'en', 'Bonjour', 'fr'),
+    ('World', 'en', 'Monde', 'fr'),
+    ('Dog', 'en', 'Chien', 'fr'),
+    ('Cat', 'en', 'Chat', 'fr'),
+    ('Bonjour', 'fr', 'Hello', 'en'),
+    ('Monde', 'fr', 'World', 'en'),
+    ('Chien', 'fr', 'Dog', 'en'),
+    ('Chat', 'fr', 'Cat', 'en'),
+    ('Hello', 'en', 'Hola', 'es'),
+    ('World', 'en', 'Mundo', 'es'),
+    ('Dog', 'en', 'Perro', 'es'),
+    ('Cat', 'en', 'Gato', 'es'),
+    ('Hola', 'es', 'Hello', 'en'),
+    ('Mundo', 'es', 'World', 'en'),
+    ('Perro', 'es', 'Dog', 'en'),
+    ('Gato', 'es', 'Cat', 'en'),
+    ('Hello', 'en', '你好', 'zh'),
+    ('World', 'en', '世界', 'zh'),
+    ('Dog', 'en', '狗', 'zh'),
+    ('Cat', 'en', '猫', 'zh'),
+    ('你好', 'zh', 'Hello', 'en'),
+    ('世界', 'zh', 'World', 'en'),
+    ('狗', 'zh', 'Dog', 'en'),
+    ('猫', 'zh', 'Cat', 'en');
+
+
+
 # INSERT INTO flashcards(back, front, level, example_sentence) VALUES
 #     ('Hello', 'Cześć', 'A1', 'Hello! How are you?'),
 #     ('Goodbye', 'Do widzenia', 'A1', 'Goodbye! See you tomorrow.'),
