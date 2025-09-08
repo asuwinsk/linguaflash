@@ -226,20 +226,40 @@ public class DeckViewController {
     }
 
     @GetMapping("/{id}/flashcards/select")
-    public String selectFlashcardsForm(@PathVariable Long id, Model model) {
-        Deck deck = deckRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+    public String selectFlashcards(
+            @PathVariable Long id,
+            @RequestParam(required = false) String sourceLang,
+            @RequestParam(required = false) String targetLang,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
 
-        // jeśli chcesz nie pokazywać fiszek już w decku:
-        List<Flashcard> all = flashcardRepository.findAll();
-        var already = deck.getFlashcards()
-                .stream().map(Flashcard::getId).collect(java.util.stream.Collectors.toSet());
-        all.removeIf(f -> already.contains(f.getId()));
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Flashcard> flashcardsPage = flashcardRepository
+                .findBySourceLangAndTargetLang(sourceLang, targetLang, pageable);
 
-        model.addAttribute("deck", deck);
-        model.addAttribute("flashcards", all); // lub flashcardRepository.findAll() jeśli nie filtrujesz
+        model.addAttribute("deck", deckRepository.findById(id).orElseThrow());
+        model.addAttribute("flashcardsPage", flashcardsPage);
+        model.addAttribute("flashcards", flashcardsPage.getContent());
+        model.addAttribute("sourceLang", sourceLang);
+        model.addAttribute("targetLang", targetLang);
+        model.addAttribute("page", page);
+
         return "flashcards/select";
     }
+//    public String selectFlashcardsForm(@PathVariable Long id, Model model) {
+//        Deck deck = deckRepository.findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+//
+//        List<Flashcard> all = flashcardRepository.findAll();
+//        var already = deck.getFlashcards()
+//                .stream().map(Flashcard::getId).collect(java.util.stream.Collectors.toSet());
+//        all.removeIf(f -> already.contains(f.getId()));
+//
+//        model.addAttribute("deck", deck);
+//        model.addAttribute("flashcards", all);
+//        return "flashcards/select";
+//    }
 
     @PostMapping("/{id}/flashcards/select")
     public String addFlashcardsToDeck(@PathVariable Long id,

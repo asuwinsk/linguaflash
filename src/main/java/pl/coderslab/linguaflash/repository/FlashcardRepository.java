@@ -14,4 +14,10 @@ public interface FlashcardRepository extends JpaRepository<Flashcard, Long> {
     @Query(value = "select f from Deck d join d.flashcards f where d.id = :deckId",
             countQuery = "select count(f) from Deck d join d.flashcards f where d.id = :deckId")
     Page<Flashcard> findByDeckId(@Param("deckId") Long deckId, Pageable pageable);
+
+    @Query(value = "select f from Flashcard f where " +
+            "(f.sourceLang = :sourceLang or :sourceLang is null) and " +
+            "(f.targetLang = :targetLang or :targetLang is null)",
+            countQuery = "select count(f) from Flashcard f where f.sourceLang = :sourceLang and f.targetLang = :targetLang")
+    Page<Flashcard> findBySourceLangAndTargetLang(@Param("sourceLang") String sourceLang, @Param("targetLang") String targetLang, Pageable pageable);
 }
