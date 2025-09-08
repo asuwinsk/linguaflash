@@ -21,7 +21,7 @@
 
   <!-- FORMULARZ FILTRÓW (GET) -->
   <form th:action="@{'/view/decks/' + ${deck.id} + '/flashcards/select'}" method="get" class="row g-3 mb-3">
-    <input type="hidden" name="page" th:value="${page}">
+    <input type="hidden" name="page" value="1">
     <div class="col-md-4">
       <label for="sourceLang" class="form-label">Source Language</label>
       <select id="sourceLang" name="sourceLang" class="form-select">
@@ -79,24 +79,27 @@
         <!-- Poprzednia strona -->
         <li class="page-item" th:classappend="${flashcardsPage.first} ? 'disabled'">
           <a class="page-link"
-             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${flashcardsPage.number - 1}&size=${flashcardsPage.size}&sourceLang=${sourceLang}&targetLang=${targetLang}|}">
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${page - 1}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}">
             Previous
           </a>
         </li>
 
         <!-- Numery stron -->
         <li class="page-item"
-            th:each="i : ${#numbers.sequence(0, flashcardsPage.totalPages - 1)}"
-            th:classappend="${i == flashcardsPage.number} ? 'active'">
+            th:each="i : ${#numbers.sequence(1, flashcardsPage.totalPages)}"
+            th:classappend="${i == page} ? 'active'">
           <a class="page-link"
-             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${i}&size=${flashcardsPage.size}&sourceLang=${sourceLang}&targetLang=${targetLang}|}"
-             th:text="${i + 1}"></a>
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${i}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}"
+             th:text="${i}"></a>
         </li>
 
         <!-- Następna strona -->
         <li class="page-item" th:classappend="${flashcardsPage.last} ? 'disabled'">
           <a class="page-link"
-             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${flashcardsPage.number + 1}&size=${flashcardsPage.size}&sourceLang=${sourceLang}&targetLang=${targetLang}|}">
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${page + 1}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}">
             Next
           </a>
         </li>
@@ -112,3 +115,4 @@
 </div>
 </body>
 </html>
+

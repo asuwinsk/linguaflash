@@ -230,13 +230,20 @@ public class DeckViewController {
             @PathVariable Long id,
             @RequestParam(required = false) String sourceLang,
             @RequestParam(required = false) String targetLang,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             Model model) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        if ("null".equalsIgnoreCase(sourceLang)) {
+            sourceLang = null;
+        }
+        if ("null".equalsIgnoreCase(targetLang)) {
+            targetLang = null;
+        }
+
+        Pageable pageable = PageRequest.of(page -1, size);
         Page<Flashcard> flashcardsPage = flashcardRepository
-                .findBySourceLangAndTargetLang(sourceLang, targetLang, pageable);
+                .findAvailableFlashcardsForDeck(id, sourceLang, targetLang, pageable);
 
         model.addAttribute("deck", deckRepository.findById(id).orElseThrow());
         model.addAttribute("flashcardsPage", flashcardsPage);
@@ -244,6 +251,7 @@ public class DeckViewController {
         model.addAttribute("sourceLang", sourceLang);
         model.addAttribute("targetLang", targetLang);
         model.addAttribute("page", page);
+        model.addAttribute("size", size);
 
         return "flashcards/select";
     }
