@@ -23,9 +23,15 @@ public class Flashcard {
     @Size(max = 100, message = "Value can be at most 100 characters")
     private String front;
 
+    @Column(length = 5)
+    private String sourceLang;
+
     @NotBlank(message = "Back value cannot be null")
     @Size(max = 100, message = "Value can be at most 100 characters")
     private String back;
+
+    @Column(length = 5)
+    private String targetLang;
 
     @NotBlank(message = "Example sentence cannot be null")
     @Size(max = 255, message = "Value can be at most 255 characters")
