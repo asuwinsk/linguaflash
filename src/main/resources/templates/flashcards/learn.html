@@ -40,6 +40,7 @@
                     <span id="levelBadge" class="level-badge text-white bg-secondary">LEVEL</span>
                     <div class="w-100 text-center">
                         <div id="face-back" class="display-6"></div>
+                        <div id="example-sentence" class="mt-2 text-muted small"></div>
                     </div>
                 </div>
             </div>
@@ -60,7 +61,7 @@
         <div id="cardsData" class="d-none">
             <div class="card-data"
                  th:each="f : ${flashcards}"
-                 th:attr="data-id=${f.id}, data-front=${f.front}, data-back=${f.back}, data-level=${f.level}">
+                 th:attr="data-id=${f.id}, data-front=${f.front}, data-back=${f.back}, data-level=${f.level}, data-example=${f.exampleSentence}">
             </div>
         </div>
     </div>

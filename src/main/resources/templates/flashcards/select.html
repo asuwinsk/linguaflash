@@ -15,8 +15,43 @@
 </head>
 <body>
 <div class="container mt-5">
-  <h1 class="mb-4 text-center">Select Flashcards for Deck: <span th:text="${deck.name}"></span></h1>
+  <h1 class="mb-4 text-center">
+    Select Flashcards for Deck: <span th:text="${deck.name}"></span>
+  </h1>
 
+  <!-- FORMULARZ FILTRÓW (GET) -->
+  <form th:action="@{'/view/decks/' + ${deck.id} + '/flashcards/select'}" method="get" class="row g-3 mb-3">
+    <input type="hidden" name="page" value="1">
+    <div class="col-md-4">
+      <label for="sourceLang" class="form-label">Source Language</label>
+      <select id="sourceLang" name="sourceLang" class="form-select">
+        <option value="">-- All --</option>
+        <option value="en" th:selected="${sourceLang == 'en'}">English</option>
+        <option value="pl" th:selected="${sourceLang == 'pl'}">Polski</option>
+        <option value="de" th:selected="${sourceLang == 'de'}">Deutsch</option>
+        <option value="fr" th:selected="${sourceLang == 'fr'}">Français</option>
+        <option value="es" th:selected="${sourceLang == 'es'}">Español</option>
+        <option value="zh" th:selected="${sourceLang == 'zh'}">中文</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="targetLang" class="form-label">Target Language</label>
+      <select id="targetLang" name="targetLang" class="form-select">
+        <option value="">-- All --</option>
+        <option value="en" th:selected="${targetLang == 'en'}">English</option>
+        <option value="pl" th:selected="${targetLang == 'pl'}">Polski</option>
+        <option value="de" th:selected="${targetLang == 'de'}">Deutsch</option>
+        <option value="fr" th:selected="${targetLang == 'fr'}">Français</option>
+        <option value="es" th:selected="${targetLang == 'es'}">Español</option>
+        <option value="zh" th:selected="${targetLang == 'zh'}">中文</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+  </form>
+
+  <!-- FORMULARZ DODAWANIA FLASHCARDS (POST) -->
   <form th:action="@{'/view/decks/' + ${deck.id} + '/flashcards/select'}" method="post">
     <table class="table table-hover thick-border">
       <thead>
@@ -37,6 +72,41 @@
       </tbody>
     </table>
 
+    <!-- PAGINACJA -->
+    <nav aria-label="Page navigation" th:if="${flashcardsPage.totalPages > 1}">
+      <ul class="pagination justify-content-center">
+
+        <!-- Poprzednia strona -->
+        <li class="page-item" th:classappend="${flashcardsPage.first} ? 'disabled'">
+          <a class="page-link"
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${page - 1}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}">
+            Previous
+          </a>
+        </li>
+
+        <!-- Numery stron -->
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence(1, flashcardsPage.totalPages)}"
+            th:classappend="${i == page} ? 'active'">
+          <a class="page-link"
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${i}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}"
+             th:text="${i}"></a>
+        </li>
+
+        <!-- Następna strona -->
+        <li class="page-item" th:classappend="${flashcardsPage.last} ? 'disabled'">
+          <a class="page-link"
+             th:href="@{|/view/decks/${deck.id}/flashcards/select?page=${page + 1}&size=${size}
+                &sourceLang=${sourceLang != null ? sourceLang : ''}&targetLang=${targetLang != null ? targetLang : ''}|}">
+            Next
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+
     <div class="mt-3">
       <button type="submit" class="btn btn-success me-2">Add Selected Flashcards</button>
       <a th:href="@{'/view/decks/' + ${deck.id}}" class="btn btn-secondary">Cancel</a>
@@ -45,3 +115,4 @@
 </div>
 </body>
 </html>
+

@@ -6,7 +6,8 @@
             id: Number(n.dataset.id),
             front: n.dataset.front || '',
             back: n.dataset.back || '',
-            level: (n.dataset.level || '').trim() // BEGINNER | INTERMEDIATE | ADVANCED
+            level: (n.dataset.level || '').trim(),
+            example: n.dataset.example || ''
         }));
     }
 
@@ -18,6 +19,7 @@
     const frontEl = document.getElementById('face-front');
     const backEl  = document.getElementById('face-back');
     const counterEl = document.getElementById('counter');
+    const exampleEl = document.getElementById('example-sentence');
 
     const flipBtn = document.getElementById('flipBtn');
     const nextBtn = document.getElementById('nextBtn');
@@ -56,6 +58,7 @@
 
         frontEl.textContent = c.front;
         backEl.textContent  = c.back;
+        exampleEl.textContent = c.example;
 
         // ustaw badge z levelem (na tylnej stronie)
         setBadge(c.level);
