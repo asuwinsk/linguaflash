@@ -55,6 +55,9 @@ public class Deck {
             inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;
 
+    @OneToOne(mappedBy = "deck", cascade = CascadeType.ALL)
+    private DeckStats deckStats;
+
 
     @PrePersist
     void onCreate() {
@@ -83,7 +86,7 @@ public class Deck {
         String s = input.trim();
         if (s.isEmpty()) return s;
         char first = Character.toUpperCase(s.charAt(0));
-        String rest = s.substring(1).toLowerCase();
+        String rest = s.substring(1);
         return first + rest;
     }
 }

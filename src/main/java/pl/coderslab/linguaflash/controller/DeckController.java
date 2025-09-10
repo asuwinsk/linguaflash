@@ -67,7 +67,6 @@ public class DeckController {
         existingDeckValue.setDescription(deckDTO.getDescription());
 //        existingDeckValue.setTargetLanguage(deckDTO.getTargetLanguage());
 //        existingDeckValue.setSourceLanguage(deckDTO.getSourceLanguage());
-        existingDeckValue.setColor(deckDTO.getColor());
 //        existingDeckValue.setDeckTag(deckDTO.getDeckTag());
         deckService.save(existingDeckValue);
         return "Deck updated successfully";

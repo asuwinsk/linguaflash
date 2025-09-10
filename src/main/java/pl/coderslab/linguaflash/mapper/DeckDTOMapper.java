@@ -15,7 +15,6 @@ public class DeckDTOMapper {
                 .dateCreated(deck.getDateCreated())
 //                .sourceLanguage(deck.getSourceLanguage() != null ? deck.getSourceLanguage().getName() : null)
 //                .targetLanguage(deck.getTargetLanguage() != null ? deck.getTargetLanguage().getName() : null)
-                .color(deck.getColor())
 //                .deckTag(deck.getDeckTag() != null ? deck.getDeckTag().getName() : null)
                 .flashcards(deck.getFlashcards())
                 .build();
@@ -28,7 +27,6 @@ public class DeckDTOMapper {
                 .description(deck.getDescription())
 //                .sourceLanguage(deck.getSourceLanguage() != null ? deck.getSourceLanguage().getName() : null)
 //                .targetLanguage(deck.getTargetLanguage() != null ? deck.getTargetLanguage().getName() : null)
-                .color(deck.getColor())
 //                .deckTag(deck.getDeckTag() != null ? deck.getDeckTag().getName() : null)
                 .build();
     }
@@ -42,7 +40,6 @@ public class DeckDTOMapper {
                 .dateCreated(deckResponseDTO.getDateCreated())
 //                .sourceLanguage(deck.getSourceLanguage() != null ? deck.getSourceLanguage().getName() : null)
 //                .targetLanguage(deck.getTargetLanguage() != null ? deck.getTargetLanguage().getName() : null)
-                .color(deckResponseDTO.getColor())
 //                .deckTag(deck.getDeckTag() != null ? deck.getDeckTag().getName() : null)
                 .flashcards(deckResponseDTO.getFlashcards())
                 .build();
@@ -56,7 +53,6 @@ public class DeckDTOMapper {
                 .description(deckRequestDTO.getDescription())
 //                .sourceLanguage(deck.getSourceLanguage() != null ? deck.getSourceLanguage().getName() : null)
 //                .targetLanguage(deck.getTargetLanguage() != null ? deck.getTargetLanguage().getName() : null)
-                .color(deckRequestDTO.getColor())
 //                .deckTag(deck.getDeckTag() != null ? deck.getDeckTag().getName() : null)
                 .build();
 

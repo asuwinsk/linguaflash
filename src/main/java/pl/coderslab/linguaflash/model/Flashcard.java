@@ -57,7 +57,7 @@ public class Flashcard {
         String s = input.trim();
         if (s.isEmpty()) return s;
         char first = Character.toUpperCase(s.charAt(0));
-        String rest = s.substring(1).toLowerCase();
+        String rest = s.substring(1);
         return first + rest;
     }
 }
