@@ -45,9 +45,6 @@ public class Deck {
     @NotNull
     private Language targetLanguage;
 
-    @Column(length = 50)
-    private String color;
-
     @ManyToOne
     @NotNull
     private DeckTag deckTag;
