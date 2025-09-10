@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.coderslab.linguaflash.model.Deck;
+import pl.coderslab.linguaflash.model.DeckStats;
 import pl.coderslab.linguaflash.model.Flashcard;
-import pl.coderslab.linguaflash.repository.DeckRepository;
-import pl.coderslab.linguaflash.repository.DeckTagRepository;
-import pl.coderslab.linguaflash.repository.FlashcardRepository;
-import pl.coderslab.linguaflash.repository.LanguageRepository;
+import pl.coderslab.linguaflash.repository.*;
+import pl.coderslab.linguaflash.service.FlashcardService;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +33,14 @@ public class DeckViewController {
     private final LanguageRepository languageRepository;
     private final DeckTagRepository deckTagRepository;
     private final FlashcardRepository flashcardRepository;
+    private final DeckStatsRepository deckStatsRepository;
 
-    public DeckViewController(DeckRepository deckRepository, LanguageRepository languageRepository, DeckTagRepository deckTagRepository, FlashcardRepository flashcardRepository) {
+    public DeckViewController(DeckRepository deckRepository, LanguageRepository languageRepository, DeckTagRepository deckTagRepository, FlashcardRepository flashcardRepository, DeckStatsRepository deckStatsRepository) {
         this.deckRepository = deckRepository;
         this.languageRepository = languageRepository;
         this.deckTagRepository = deckTagRepository;
         this.flashcardRepository = flashcardRepository;
+        this.deckStatsRepository = deckStatsRepository;
     }
 
     @GetMapping
@@ -308,6 +310,18 @@ public class DeckViewController {
     public String learn(@PathVariable Long id, Model model) {
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Deck not found"));
+
+        DeckStats stats = deck.getDeckStats();
+        if (stats == null) {
+            stats = new DeckStats();
+            stats.setDeck(deck);
+            stats.setTimesLearned(0);
+        }
+        stats.setTimesLearned(stats.getTimesLearned() + 1);
+        stats.setLastLearned(LocalDateTime.now());
+        deck.setDeckStats(stats);
+
+        deckStatsRepository.save(stats);
 
         List<Flashcard> flashcards = deck.getFlashcards()
                         .stream()

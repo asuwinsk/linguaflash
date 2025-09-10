@@ -55,6 +55,9 @@ public class Deck {
             inverseJoinColumns = @JoinColumn(name = "flashcard_id"))
     private List<Flashcard> flashcards;
 
+    @OneToOne(mappedBy = "deck", cascade = CascadeType.ALL)
+    private DeckStats deckStats;
+
 
     @PrePersist
     void onCreate() {

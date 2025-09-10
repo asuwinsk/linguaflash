@@ -41,9 +41,6 @@ public class Flashcard {
     @Enumerated(EnumType.STRING)
     private Level level;
 
-    @OneToOne(mappedBy = "flashcard", cascade = CascadeType.ALL)
-    private FlashcardStats stats;
-
 
     @PrePersist
     @PreUpdate

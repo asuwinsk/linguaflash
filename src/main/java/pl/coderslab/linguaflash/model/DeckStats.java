@@ -7,31 +7,27 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "flashcard_stats")
+@Table(name = "deck_stats")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlashcardStats {
+public class DeckStats {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer timesShown;
+    // number of times flashcards learned in deck
+    // number of user's click to button 'Let's learn!' [GET endpoint view/decks/{id}/learn]
+    private Integer timesLearned;
 
+    // date of the last learn of flashcards in deck
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Warsaw")
-    private LocalDateTime lastReviewed;
+    private LocalDateTime lastLearned;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "id")
-    private Flashcard flashcard;
+    private Deck deck;
 
-
-    @PrePersist
-    void onCreate() {
-        if (lastReviewed == null) {
-            lastReviewed = LocalDateTime.now();
-        }
-    }
 }
