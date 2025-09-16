@@ -73,7 +73,8 @@ http://localhost:8080
     Filter by source/target languages and multi-select flashcards from a range.
 
 7.	Learning mode<br>
-    ![Learning mode](images/readme/7.png)<br>
+    ![Learning mode - flashcard front](images/readme/7.png)<br>
+    ![Learning mode - flashcard back](images/readme/8.png)<br>
     By clicking ‘Let’s Learn!’ in View flashcards, user can test knowledge by rotating flashcards. Firstly, 
     showing Front and then Back with example sentence and level. User can navigate with Next/Previous, 
     draw random flashcards, or reset to start over.
