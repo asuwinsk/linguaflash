@@ -16,22 +16,22 @@ This Spring Boot application provides two types of endpoints – **REST API** re
 the application itself runs locally. 
 
 To run:
-1. Clone the repository  
+1. **Clone the repository**  
     `git clone https://github.com/asuwinsk/linguaflash/.git`<br>
     `cd Liguaflash`
 
-2. Start MySQL DB in Docker<br>
+2. **Start MySQL DB in Docker**<br>
     `docker-compose up -d`
 
-DB connection details:<br>
-host: localhost<br>
-port: 3306<br>
-user: root<br>
-password: root<br>
-database: mydb<br>
+    DB connection details:<br>
+    host: localhost<br>
+    port: 3307<br>
+    user: root<br>
+    password: root<br>
+    database: linguaflash<br>
 
-2.	Run the Application<br>
-    Run locally with:  `./mvnw spring-boot:run` or use IDE.
+2.	**Run the Application**<br>
+    Run locally with: `./mvnw spring-boot:run` or use IDE.
 
 Application will be available at:
 http://localhost:8080
