@@ -1,0 +1,90 @@
+.scene {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+.card3d {
+    position: relative;
+    width: 100%;
+    min-height: 220px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    background: #fff;
+}
+.card3d.is-flipped {
+    transform: rotateY(180deg);
+}
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    padding: 24px;
+    border-radius: 12px;
+}
+.card-front {
+    background: #f8f9fa;
+}
+.card-back {
+    background: #e7f1ff;
+    transform: rotateY(180deg);
+}
+.controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.counter {
+    text-align: center;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+.level-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    padding: 0.35rem 0.7rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+/* Pełnoekranowe tło dla widoku learn */
+.learn-bg {
+    background-image: url('/img/background.png'); /* wrzuć plik do static/img */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* opcjonalnie, wyłącz na mobile jeśli chcesz */
+    min-height: 100vh;
+}
+
+/* Delikatna nakładka poprawiająca kontrast */
+.bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.15); /* moc 0.15–0.4 */
+    z-index: 0;
+}
+
+/* Upewnij się, że treść jest nad nakładką */
+.container.position-relative {
+    z-index: 1;
+}
+
+/* (opcjonalnie) na mobile odetnij parallax dla płynności */
+@media (max-width: 576px) {
+    .learn-bg {
+        background-attachment: scroll;
+    }
+}
