@@ -19,7 +19,7 @@
     Select Flashcards for Deck: <span th:text="${deck.name}"></span>
   </h1>
 
-  <!-- FORMULARZ FILTRÓW (GET) -->
+
   <form th:action="@{'/view/decks/' + ${deck.id} + '/flashcards/select'}" method="get" class="row g-3 mb-3">
     <input type="hidden" name="page" value="1">
     <div class="col-md-4">

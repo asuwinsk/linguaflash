@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import lombok.*;
 import pl.coderslab.linguaflash.model.Flashcard;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 

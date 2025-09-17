@@ -2,8 +2,6 @@ package pl.coderslab.linguaflash.dto;
 
 
 import lombok.*;
-import pl.coderslab.linguaflash.model.DeckTag;
-import pl.coderslab.linguaflash.model.Language;
 
 @Getter
 @Setter

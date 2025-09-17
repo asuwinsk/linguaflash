@@ -17,7 +17,6 @@ import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.model.DeckStats;
 import pl.coderslab.linguaflash.model.Flashcard;
 import pl.coderslab.linguaflash.repository.*;
-import pl.coderslab.linguaflash.service.FlashcardService;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;

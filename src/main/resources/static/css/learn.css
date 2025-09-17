@@ -59,30 +59,23 @@
     font-weight: 700;
     letter-spacing: .02em;
 }
-/* Pełnoekranowe tło dla widoku learn */
 .learn-bg {
-    background-image: url('/img/background.png'); /* wrzuć plik do static/img */
+    background-image: url('/img/background.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* opcjonalnie, wyłącz na mobile jeśli chcesz */
+    background-attachment: fixed;
     min-height: 100vh;
 }
-
-/* Delikatna nakładka poprawiająca kontrast */
 .bg-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.15); /* moc 0.15–0.4 */
+    background: rgba(0, 0, 0, 0.15);
     z-index: 0;
 }
-
-/* Upewnij się, że treść jest nad nakładką */
 .container.position-relative {
     z-index: 1;
 }
-
-/* (opcjonalnie) na mobile odetnij parallax dla płynności */
 @media (max-width: 576px) {
     .learn-bg {
         background-attachment: scroll;

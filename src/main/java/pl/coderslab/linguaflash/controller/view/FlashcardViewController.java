@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.coderslab.linguaflash.model.Deck;
 import pl.coderslab.linguaflash.model.Flashcard;
 import pl.coderslab.linguaflash.repository.FlashcardRepository;
 

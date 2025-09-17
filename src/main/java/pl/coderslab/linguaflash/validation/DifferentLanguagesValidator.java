@@ -17,7 +17,6 @@ public class DifferentLanguagesValidator implements ConstraintValidator<Differen
                 value.getTargetLanguage().getId()
         );
         if (!ok) {
-            // opcjonalnie przypnij błąd do konkretnego pola
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                     .addPropertyNode("targetLanguage")

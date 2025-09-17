@@ -1,5 +1,5 @@
 (function () {
-    // 1) Wczytaj karty z ukrytego kontenera #cardsData (dostarczanego przez Thymeleaf)
+
     function readCardsFromDom() {
         const nodes = document.querySelectorAll('#cardsData .card-data');
         return Array.from(nodes).map(n => ({
@@ -14,7 +14,7 @@
     const cards = readCardsFromDom();
     if (!cards.length) return; // brak danych — nic nie rób
 
-    // 2) Referencje do DOM
+
     const cardEl = document.getElementById('card');
     const frontEl = document.getElementById('face-front');
     const backEl  = document.getElementById('face-back');
@@ -27,15 +27,15 @@
     const restartBtn = document.getElementById('restartBtn');
     const shuffleToggle = document.getElementById('shuffleToggle');
 
-    // Badge level na tylnej stronie
+
     const levelBadgeEl = document.getElementById('levelBadge');
 
-    // 3) Stan
+
     let order = cards.map((_, i) => i);
     let idx = 0;
     let flipped = false;
 
-    // 4) Mapowanie Level -> kolor (Bootstrap)
+
     const levelColorMap = {
         BEGINNER: 'bg-success',
         INTERMEDIATE: 'bg-warning',
@@ -51,7 +51,7 @@
         }
     }
 
-    // 5) Render aktualnej karty
+
     function render() {
         const c = cards[order[idx]];
         if (!c) return;
@@ -60,14 +60,13 @@
         backEl.textContent  = c.back;
         exampleEl.textContent = c.example;
 
-        // ustaw badge z levelem (na tylnej stronie)
+
         setBadge(c.level);
 
         counterEl.textContent = `Flashcard ${idx + 1} / ${order.length}`;
         cardEl.classList.toggle('is-flipped', flipped);
     }
 
-    // 6) Akcje
     function flip() {
         flipped = !flipped;
         cardEl.classList.toggle('is-flipped', flipped);
@@ -98,7 +97,6 @@
         render();
     }
 
-    // 7) Zdarzenia
     flipBtn?.addEventListener('click', flip);
     nextBtn?.addEventListener('click', next);
     prevBtn?.addEventListener('click', prev);
@@ -121,6 +119,5 @@
         }
     });
 
-    // 8) Start
     render();
 })();
